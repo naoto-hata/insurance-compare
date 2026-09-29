@@ -364,13 +364,38 @@ document.querySelectorAll('#modeBtns button').forEach(b=&gt;b.onclick=()=&gt;{mo
 }
 /* prevent visually empty panels */
 :empty{display:none}
-&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div class=&quot;wrap&quot;&gt;&lt;div class=&quot;hero&quot;&gt;&lt;h1 id=&quot;medTitle&quot;&gt;医療保険 11社比較&lt;/h1&gt;&lt;div class=&quot;mobile-quick&quot;&gt;&lt;b&gt;現場用表示&lt;/b&gt;&lt;br/&gt;上から「保険料 → 入院 → 手術 → 一時金 → 先進医療 → P免」の順に確認。細かい条件は必要な時だけ展開。&lt;/div&gt;&lt;button class=&quot;pmen-guide-btn&quot; id=&quot;pmenGuideBtn&quot;&gt;P免条件を横比較&lt;/button&gt;
+
+/* v15: premium comparison first */
+.premium-first-note{
+  margin:8px 0 10px;padding:8px 10px;border-radius:10px;
+  background:#f5f8fa;border:1px solid #dce5ec;font-size:12px;
+}
+@media(max-width:700px){
+  /* The comparison itself stays horizontal; swipe sideways rather than stacking companies. */
+  table{min-width:760px!important;width:max-content!important}
+  .table-wrap,.comparison-wrap,.results-table,.mxscroll{
+    overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;
+    width:100%!important;
+  }
+  th:first-child,td:first-child{
+    position:sticky!important;left:0!important;z-index:2!important;
+    background:inherit;
+  }
+  .controls,.control-row,.filters{
+    display:flex!important;flex-wrap:wrap!important;gap:6px!important;
+  }
+  .controls&gt;* ,.control-row&gt;* ,.filters&gt;*{flex:1 1 44%!important}
+  /* Detailed explanatory blocks belong below the main comparison. */
+  .pm-verified-status,.pm-type-matrix,.field-detail{
+    margin-top:14px!important;
+  }
+}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div class=&quot;wrap&quot;&gt;&lt;div class=&quot;hero&quot;&gt;&lt;h1 id=&quot;medTitle&quot;&gt;医療保険 11社比較&lt;/h1&gt;&lt;button class=&quot;pmen-guide-btn&quot; id=&quot;pmenGuideBtn&quot;&gt;P免条件を横比較&lt;/button&gt;
 &lt;div class=&quot;med-pm-switch&quot;&gt;
 &lt;b&gt;P免表示&lt;/b&gt;
 &lt;button class=&quot;on&quot; id=&quot;medPmOff&quot;&gt;なし&lt;/button&gt;&lt;button id=&quot;medPmOn&quot;&gt;あり&lt;/button&gt;
 &lt;span class=&quot;med-pm-msg&quot; id=&quot;medPmMsg&quot;&gt;現在の保険料表を表示&lt;/span&gt;
 &lt;/div&gt;
-
 &lt;div class=&quot;med-audit med-audit-v2&quot;&gt;
 &lt;h3&gt;医療保険｜P免条件 詳細比較&lt;/h3&gt;
 &lt;p&gt;現在ツールに登録している通常型7社を対象に、各社公式情報と照合した比較ポイント。保険料は既存の設計書データを維持し、公式サイトの例示保険料で上書きしていません。&lt;/p&gt;
@@ -408,9 +433,28 @@ document.querySelectorAll('#modeBtns button').forEach(b=&gt;b.onclick=()=&gt;{mo
 &lt;div class=&quot;med-premium-audit&quot;&gt;
 &lt;h3&gt;保険料照合台帳（公式情報との突合）&lt;/h3&gt;
 &lt;p&gt;ここでは「公式に確認できた数字」と「現在の比較条件にそのまま採用できる数字」を分けています。保障条件が違う公式モデル保険料は、既存の比較保険料へ上書きしません。&lt;/p&gt;
-&lt;div class=&quot;scrolltbl&quot;&gt;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;会社&lt;/th&gt;&lt;th&gt;性別&lt;/th&gt;&lt;th&gt;年齢&lt;/th&gt;&lt;th&gt;公式保険料例&lt;/th&gt;&lt;th&gt;確認状況&lt;/th&gt;&lt;th&gt;採用判定&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;div class=&quot;scrolltbl mxscroll&quot;&gt;&lt;div class=&quot;premium-first-note&quot;&gt;← 各社の保険料を横並びで比較できます。スマホは左右にスワイプ&lt;/div&gt;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;会社&lt;/th&gt;&lt;th&gt;性別&lt;/th&gt;&lt;th&gt;年齢&lt;/th&gt;&lt;th&gt;公式保険料例&lt;/th&gt;&lt;th&gt;確認状況&lt;/th&gt;&lt;th&gt;採用判定&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
 &lt;tr&gt;&lt;td&gt;なないろ生命&lt;/td&gt;&lt;td&gt;男性&lt;/td&gt;&lt;td&gt;20&lt;/td&gt;&lt;td&gt;2,118円&lt;/td&gt;&lt;td&gt;公式現行例&lt;/td&gt;&lt;td&gt;既存ツール条件と完全一致を確認後に差額化&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;なないろ生命&lt;/td&gt;&lt;td&gt;男性&lt;/td&gt;&lt;td&gt;30&lt;/td&gt;&lt;td&gt;2,778円&lt;/td&gt;&lt;td&gt;公式現行例&lt;/td&gt;&lt;td&gt;既存ツール条件と完全一致を確認後に差額化&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;なないろ生命&lt;/td&gt;&lt;td&gt;男性&lt;/td&gt;&lt;td&gt;40&lt;/td&gt;&lt;td&gt;3,893円&lt;/td&gt;&lt;td&gt;公式現行例&lt;/td&gt;&lt;td&gt;既存ツール条件と完全一致を確認後に差額化&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;なないろ生命&lt;/td&gt;&lt;td&gt;男性&lt;/td&gt;&lt;td&gt;50&lt;/td&gt;&lt;td&gt;5,893円&lt;/td&gt;&lt;td&gt;公式現行例&lt;/td&gt;&lt;td&gt;既存ツール条件と完全一致を確認後に差額化&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;なないろ生命&lt;/td&gt;&lt;td&gt;男性&lt;/td&gt;&lt;td&gt;60&lt;/td&gt;&lt;td&gt;9,068円&lt;/td&gt;&lt;td&gt;公式現行例&lt;/td&gt;&lt;td&gt;既存ツール条件と完全一致を確認後に差額化&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;なないろ生命&lt;/td&gt;&lt;td&gt;女性&lt;/td&gt;&lt;td&gt;20&lt;/td&gt;&lt;td&gt;2,304円&lt;/td&gt;&lt;td&gt;公式現行例&lt;/td&gt;&lt;td&gt;既存ツール条件と完全一致を確認後に差額化&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;なないろ生命&lt;/td&gt;&lt;td&gt;女性&lt;/td&gt;&lt;td&gt;30&lt;/td&gt;&lt;td&gt;2,803円&lt;/td&gt;&lt;td&gt;公式現行例&lt;/td&gt;&lt;td&gt;既存ツール条件と完全一致を確認後に差額化&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;なないろ生命&lt;/td&gt;&lt;td&gt;女性&lt;/td&gt;&lt;td&gt;40&lt;/td&gt;&lt;td&gt;3,355円&lt;/td&gt;&lt;td&gt;公式現行例&lt;/td&gt;&lt;td&gt;既存ツール条件と完全一致を確認後に差額化&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;なないろ生命&lt;/td&gt;&lt;td&gt;女性&lt;/td&gt;&lt;td&gt;50&lt;/td&gt;&lt;td&gt;4,605円&lt;/td&gt;&lt;td&gt;公式現行例&lt;/td&gt;&lt;td&gt;既存ツール条件と完全一致を確認後に差額化&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;なないろ生命&lt;/td&gt;&lt;td&gt;女性&lt;/td&gt;&lt;td&gt;60&lt;/td&gt;&lt;td&gt;6,567円&lt;/td&gt;&lt;td&gt;公式現行例&lt;/td&gt;&lt;td&gt;既存ツール条件と完全一致を確認後に差額化&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;details class=&quot;pm-verified-status field-detail&quot;&gt;&lt;summary&gt;P免の詳細・根拠を確認&lt;/summary&gt;&lt;div class=&quot;pm-verified-status&quot;&gt;
+&lt;h3&gt;P免データ｜公式確認状況&lt;/h3&gt;
+&lt;div class=&quot;vrow ok&quot;&gt;&lt;b&gt;FWD医療Ⅱ&lt;/b&gt;&lt;span&gt;約款でP免Ⅲの1型・2型を再確認。1型は急性心筋梗塞以外の心疾患／脳卒中以外の脳血管疾患の「入院15日以上」要件あり。2型は心疾患・脳血管疾患を対象。&lt;/span&gt;&lt;a href=&quot;https://www.fwdlife.co.jp/ec/assets/v3/assets/blt52d7347d77fa3188/blt7c26254a9c07fdc2/678e1538c459cf1300ae5c05/20250302_yakkan_fwdiryou2.pdf&quot; target=&quot;_blank&quot;&gt;約款&lt;/a&gt;&lt;/div&gt;
+&lt;div class=&quot;vrow ok&quot;&gt;&lt;b&gt;第一ネオ生命&lt;/b&gt;&lt;span&gt;現行パンフレットでP免A型・B型・八大疾病型と、上皮内がんを含む対象疾病を再確認。型ごとの保険料は公式表の列対応を誤認しないよう、未確定値は本表へ入れない。&lt;/span&gt;&lt;a href=&quot;https://download.neofirst.co.jp/webcatalog/pamphlet/p_iryou_neodeiryou/chigin_iryo.pdf&quot; target=&quot;_blank&quot;&gt;パンフレット&lt;/a&gt;&lt;/div&gt;
+&lt;div class=&quot;vrow ok&quot;&gt;&lt;b&gt;メディケア生命&lt;/b&gt;&lt;span&gt;特定3疾病P免(25)は上皮内がんでも払込免除となることを公式FAQで確認。&lt;/span&gt;&lt;a href=&quot;https://www.medicarelife.com/products/medifit_na/&quot; target=&quot;_blank&quot;&gt;公式&lt;/a&gt;&lt;/div&gt;
+&lt;div class=&quot;vrow hold&quot;&gt;&lt;b&gt;保険料差額&lt;/b&gt;&lt;span&gt;FWD・第一ネオ・メディケア等は公式資料に保険料表があっても、既存ツールの「入院一時金・先進医療・手術型・料率区分」と列を完全一致できた数値だけ採用。未確定値は表示しない。&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;&lt;/details&gt;&lt;details class=&quot;pm-type-matrix field-detail&quot;&gt;&lt;summary&gt;P免の詳細・根拠を確認&lt;/summary&gt;&lt;div class=&quot;pm-type-matrix&quot;&gt;
+&lt;h3&gt;P免｜型による違いを一目で&lt;/h3&gt;
+&lt;div class=&quot;mxscroll&quot;&gt;&lt;table&gt;
+&lt;thead&gt;&lt;tr&gt;&lt;th&gt;会社&lt;/th&gt;&lt;th&gt;型&lt;/th&gt;&lt;th&gt;がん&lt;/th&gt;&lt;th&gt;心疾患&lt;/th&gt;&lt;th&gt;脳血管疾患&lt;/th&gt;&lt;th&gt;ポイント&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;第一ネオ生命&lt;/td&gt;&lt;td&gt;三大疾病A型&lt;/td&gt;&lt;td&gt;初回診断（上皮内含む）&lt;/td&gt;&lt;td&gt;継続20日以上入院 or 手術&lt;/td&gt;&lt;td&gt;継続20日以上入院 or 手術&lt;/td&gt;&lt;td&gt;入院要件は長め&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;第一ネオ生命&lt;/td&gt;&lt;td&gt;三大疾病B型&lt;/td&gt;&lt;td&gt;初回診断（上皮内含む）&lt;/td&gt;&lt;td&gt;1日以上入院 or 手術&lt;/td&gt;&lt;td&gt;1日以上入院 or 手術&lt;/td&gt;&lt;td&gt;心・脳の要件がA型より広い&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;第一ネオ生命&lt;/td&gt;&lt;td&gt;八大疾病型&lt;/td&gt;&lt;td&gt;初回診断（上皮内含む）&lt;/td&gt;&lt;td&gt;1日以上入院 or 手術&lt;/td&gt;&lt;td&gt;1日以上入院 or 手術&lt;/td&gt;&lt;td&gt;さらに糖尿病・肝・膵・腎・高血圧性疾患等も対象&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;FWD生命&lt;/td&gt;&lt;td&gt;P免Ⅲ 1型&lt;/td&gt;&lt;td&gt;所定のがん&lt;/td&gt;&lt;td&gt;急性心筋梗塞以外は継続15日以上入院要件あり&lt;/td&gt;&lt;td&gt;脳卒中以外は継続15日以上入院要件あり&lt;/td&gt;&lt;td&gt;疾病区分で要件差&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;FWD生命&lt;/td&gt;&lt;td&gt;P免Ⅲ 2型&lt;/td&gt;&lt;td&gt;所定のがん&lt;/td&gt;&lt;td&gt;心疾患&lt;/td&gt;&lt;td&gt;脳血管疾患&lt;/td&gt;&lt;td&gt;対象疾病範囲が1型よりシンプル&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;メディケア生命&lt;/td&gt;&lt;td&gt;特定3疾病P免(25)&lt;/td&gt;&lt;td&gt;上皮内がんも対象&lt;/td&gt;&lt;td&gt;所定事由&lt;/td&gt;&lt;td&gt;所定事由&lt;/td&gt;&lt;td&gt;詳細事由は申込時資料で最終確認&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;
+&lt;p&gt;※「or 手術」は各商品の所定の手術。がんの責任開始・待機期間など細部は各社の契約概要・約款を優先。&lt;/p&gt;
+&lt;/div&gt;&lt;/details&gt;
 &lt;div class=&quot;verify-list&quot;&gt;
 &lt;b&gt;今回の確認結果&lt;/b&gt;
 &lt;ul&gt;
@@ -457,27 +501,8 @@ document.querySelectorAll('#modeBtns button').forEach(b=&gt;b.onclick=()=&gt;{mo
 &lt;p class=&quot;small&quot;&gt;※この表は「P免そのものの価格差」を見るための公式同条件データ。現在のメイン比較表の保障条件と一致しない場合は、メイン保険料を上書きしません。&lt;/p&gt;
 &lt;div class=&quot;fwdcheck&quot;&gt;&lt;b&gt;FWD医療Ⅱ&lt;/b&gt;&lt;span&gt;公式保険料表にはP免Ⅲあり／なしの区分があることを確認済み。ただし、主契約の型・優良体/標準体・P免1型/2型を完全一致させる必要があるため、数値の自動転記はまだ行っていません。&lt;/span&gt;&lt;/div&gt;
 &lt;/div&gt;
-&lt;details class=&quot;pm-verified-status field-detail&quot;&gt;&lt;summary&gt;P免の詳細・根拠を確認&lt;/summary&gt;&lt;div class=&quot;pm-verified-status&quot;&gt;
-&lt;h3&gt;P免データ｜公式確認状況&lt;/h3&gt;
-&lt;div class=&quot;vrow ok&quot;&gt;&lt;b&gt;FWD医療Ⅱ&lt;/b&gt;&lt;span&gt;約款でP免Ⅲの1型・2型を再確認。1型は急性心筋梗塞以外の心疾患／脳卒中以外の脳血管疾患の「入院15日以上」要件あり。2型は心疾患・脳血管疾患を対象。&lt;/span&gt;&lt;a href=&quot;https://www.fwdlife.co.jp/ec/assets/v3/assets/blt52d7347d77fa3188/blt7c26254a9c07fdc2/678e1538c459cf1300ae5c05/20250302_yakkan_fwdiryou2.pdf&quot; target=&quot;_blank&quot;&gt;約款&lt;/a&gt;&lt;/div&gt;
-&lt;div class=&quot;vrow ok&quot;&gt;&lt;b&gt;第一ネオ生命&lt;/b&gt;&lt;span&gt;現行パンフレットでP免A型・B型・八大疾病型と、上皮内がんを含む対象疾病を再確認。型ごとの保険料は公式表の列対応を誤認しないよう、未確定値は本表へ入れない。&lt;/span&gt;&lt;a href=&quot;https://download.neofirst.co.jp/webcatalog/pamphlet/p_iryou_neodeiryou/chigin_iryo.pdf&quot; target=&quot;_blank&quot;&gt;パンフレット&lt;/a&gt;&lt;/div&gt;
-&lt;div class=&quot;vrow ok&quot;&gt;&lt;b&gt;メディケア生命&lt;/b&gt;&lt;span&gt;特定3疾病P免(25)は上皮内がんでも払込免除となることを公式FAQで確認。&lt;/span&gt;&lt;a href=&quot;https://www.medicarelife.com/products/medifit_na/&quot; target=&quot;_blank&quot;&gt;公式&lt;/a&gt;&lt;/div&gt;
-&lt;div class=&quot;vrow hold&quot;&gt;&lt;b&gt;保険料差額&lt;/b&gt;&lt;span&gt;FWD・第一ネオ・メディケア等は公式資料に保険料表があっても、既存ツールの「入院一時金・先進医療・手術型・料率区分」と列を完全一致できた数値だけ採用。未確定値は表示しない。&lt;/span&gt;&lt;/div&gt;
-&lt;/div&gt;&lt;/details&gt;
-&lt;details class=&quot;pm-type-matrix field-detail&quot;&gt;&lt;summary&gt;P免の詳細・根拠を確認&lt;/summary&gt;&lt;div class=&quot;pm-type-matrix&quot;&gt;
-&lt;h3&gt;P免｜型による違いを一目で&lt;/h3&gt;
-&lt;div class=&quot;mxscroll&quot;&gt;&lt;table&gt;
-&lt;thead&gt;&lt;tr&gt;&lt;th&gt;会社&lt;/th&gt;&lt;th&gt;型&lt;/th&gt;&lt;th&gt;がん&lt;/th&gt;&lt;th&gt;心疾患&lt;/th&gt;&lt;th&gt;脳血管疾患&lt;/th&gt;&lt;th&gt;ポイント&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;&lt;td&gt;第一ネオ生命&lt;/td&gt;&lt;td&gt;三大疾病A型&lt;/td&gt;&lt;td&gt;初回診断（上皮内含む）&lt;/td&gt;&lt;td&gt;継続20日以上入院 or 手術&lt;/td&gt;&lt;td&gt;継続20日以上入院 or 手術&lt;/td&gt;&lt;td&gt;入院要件は長め&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;第一ネオ生命&lt;/td&gt;&lt;td&gt;三大疾病B型&lt;/td&gt;&lt;td&gt;初回診断（上皮内含む）&lt;/td&gt;&lt;td&gt;1日以上入院 or 手術&lt;/td&gt;&lt;td&gt;1日以上入院 or 手術&lt;/td&gt;&lt;td&gt;心・脳の要件がA型より広い&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;第一ネオ生命&lt;/td&gt;&lt;td&gt;八大疾病型&lt;/td&gt;&lt;td&gt;初回診断（上皮内含む）&lt;/td&gt;&lt;td&gt;1日以上入院 or 手術&lt;/td&gt;&lt;td&gt;1日以上入院 or 手術&lt;/td&gt;&lt;td&gt;さらに糖尿病・肝・膵・腎・高血圧性疾患等も対象&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;FWD生命&lt;/td&gt;&lt;td&gt;P免Ⅲ 1型&lt;/td&gt;&lt;td&gt;所定のがん&lt;/td&gt;&lt;td&gt;急性心筋梗塞以外は継続15日以上入院要件あり&lt;/td&gt;&lt;td&gt;脳卒中以外は継続15日以上入院要件あり&lt;/td&gt;&lt;td&gt;疾病区分で要件差&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;FWD生命&lt;/td&gt;&lt;td&gt;P免Ⅲ 2型&lt;/td&gt;&lt;td&gt;所定のがん&lt;/td&gt;&lt;td&gt;心疾患&lt;/td&gt;&lt;td&gt;脳血管疾患&lt;/td&gt;&lt;td&gt;対象疾病範囲が1型よりシンプル&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;メディケア生命&lt;/td&gt;&lt;td&gt;特定3疾病P免(25)&lt;/td&gt;&lt;td&gt;上皮内がんも対象&lt;/td&gt;&lt;td&gt;所定事由&lt;/td&gt;&lt;td&gt;所定事由&lt;/td&gt;&lt;td&gt;詳細事由は申込時資料で最終確認&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;
-&lt;p&gt;※「or 手術」は各商品の所定の手術。がんの責任開始・待機期間など細部は各社の契約概要・約款を優先。&lt;/p&gt;
-&lt;/div&gt;&lt;/details&gt;
+
+
 &lt;style&gt;
 .med-audit{margin:14px 0;padding:14px;border:1px solid #d8e1eb;border-radius:14px;background:#fbfdff}
 .med-audit h3{margin:0 0 8px;font-size:16px}.med-audit p{font-size:12px;line-height:1.65;color:#52606d}
