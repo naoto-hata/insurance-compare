@@ -8,19 +8,10 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-SOURCES = [
-    ("メットライフ｜サニーガーデン", "https://www.metlife.co.jp/lf1/ahp805/08.html"),
-    ("メットライフ｜ビーウィズユー米ドル", "https://www.metlife.co.jp/lf1/ahp770/08.html"),
-    ("メットライフ｜ビーウィズユー円", "https://www.metlife.co.jp/lf1/ahp771/08.html"),
-    ("第一フロンティア｜プレミアプレゼント5", "https://www.d-frontier-life.co.jp/products/index_hendo_shushin_choice_20_6.html?agency=227&product=224"),
-    ("第一フロンティア｜プレミアレシーブ2", "https://www.d-frontier-life.co.jp/products/index_recurrining_payment_shushin_23.html?agency=132&product=204"),
-    ("マニュライフ｜未来を楽しむ", "https://www.manulife.co.jp/ja/individual/rates/tanoshimusyushin/int.html"),
-    ("マニュライフ｜未来につなげる", "https://www.manulife.co.jp/ja/individual/rates/miraisyushinv2-1/ln-baseint.html"),
-    ("FWD｜円建一時払変額年金", "https://customer.fwdlife.co.jp/seimei/rate/AccumulatedInterestRateDistributionRate.html"),
-    ("オリックス｜ムーンショット", "https://www.orixlife.co.jp/fx/whole-life/accumulation-interest-rate"),
-    ("ジブラルタ｜一時払終身", "https://www.gib-life.co.jp/st/intro/products/kyotsu/rate/tatsuka_syushin_23/fxrate/"),
-    ("ソニー｜一時払終身", "https://www.sonylife.co.jp/rate/accumulation_interest_rate/"),
-]
+# The single source-of-truth catalog is shared with the proposed rate records.
+catalog = json.loads(Path("rates/catalog.json").read_text(encoding="utf-8"))
+SOURCES = [(p["name"], p["official_url"]) for p in catalog["products"]]
+
 JST = dt.timezone(dt.timedelta(hours=9))
 now = dt.datetime.now(JST)
 period_start = 1 if now.day < 16 else 16
