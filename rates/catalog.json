@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "description": "Each public rate needs independent condition-specific source verification. No rate figures are populated by this catalog.",
+  "status": "monitoring-only",
+  "products": [
+    {
+      "id": "sunny",
+      "name": "サニーガーデン プライム",
+      "official_url": "https://www.metlife.co.jp/lf1/ahp805/08.html"
+    },
+    {
+      "id": "bewithusd",
+      "name": "ビー ウィズ ユー プラスⅡ（米ドル建）",
+      "official_url": "https://www.metlife.co.jp/lf1/ahp770/08.html"
+    },
+    {
+      "id": "bewithjpy",
+      "name": "ビー ウィズ ユー プラスⅡ（円建）",
+      "official_url": "https://www.metlife.co.jp/lf1/ahp771/08.html"
+    },
+    {
+      "id": "present",
+      "name": "プレミアプレゼント5",
+      "official_url": "https://www.d-frontier-life.co.jp/products/index_hendo_shushin_choice_20_6.html?agency=227&product=224"
+    },
+    {
+      "id": "receive",
+      "name": "プレミアレシーブ2",
+      "official_url": "https://www.d-frontier-life.co.jp/products/index_recurrining_payment_shushin_23.html?agency=132&product=204"
+    },
+    {
+      "id": "upside",
+      "name": "アップサイドプラス",
+      "official_url": "https://www2.axa.co.jp/party/contractor/report/spw.html"
+    },
+    {
+      "id": "enjoy",
+      "name": "未来を楽しむ終身保険",
+      "official_url": "https://www.manulife.co.jp/ja/individual/rates/tanoshimusyushin/int.html"
+    },
+    {
+      "id": "connect",
+      "name": "未来につなげる終身保険v2",
+      "official_url": "https://www.manulife.co.jp/ja/individual/rates/miraisyushinv2-1/ln-baseint.html"
+    },
+    {
+      "id": "medicare",
+      "name": "メディフィット一時払終身＋がん",
+      "official_url": "https://www.medicarelife.com/products/shop/medifit_ig/"
+    },
+    {
+      "id": "fwd",
+      "name": "FWD円建一時払変額年金（ラチェット）",
+      "official_url": "https://customer.fwdlife.co.jp/seimei/rate/AccumulatedInterestRateDistributionRate.html"
+    },
+    {
+      "id": "moon",
+      "name": "Moonshot（ムーンショット）",
+      "official_url": "https://www.orixlife.co.jp/fx/whole-life/accumulation-interest-rate"
+    },
+    {
+      "id": "gib",
+      "name": "積立利率更改型一時払終身保険（23）",
+      "official_url": "https://www.gib-life.co.jp/st/intro/products/kyotsu/rate/tatsuka_syushin_23/fxrate/"
+    },
+    {
+      "id": "sony",
+      "name": "指定通貨建積立利率更改型一時払終身保険（無告知型）",
+      "official_url": "https://www.sonylife.co.jp/rate/accumulation_interest_rate/"
+    }
+  ]
+}
