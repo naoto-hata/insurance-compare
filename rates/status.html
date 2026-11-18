@@ -22,7 +22,7 @@ for(const p of c.products){
  const a=document.createElement('a');a.href=p.official_url;a.rel='noopener noreferrer';a.target='_blank';a.textContent='公式ページを開く';link.append(a);
  left.append(title,link);
  const state=document.createElement('span');state.className='pill';
- state.textContent=stale?'要確認（監視結果が古い）':(statuses.get(p.id)||'監視結果なし');
+ const result=s.monitoring_results.find(r=>r.product_id===p.id);state.textContent=stale?'要確認（監視結果が古い）':(!result?'監視結果なし':result.status+(result.content_changed?'／ページ内容変化あり':''));
  el.append(left,state);$('items').append(el);
 }
 }catch(err){$('checked').textContent='監視結果の読み込みに失敗しました。GitHub Actionsの実行状況を確認してください。'}
