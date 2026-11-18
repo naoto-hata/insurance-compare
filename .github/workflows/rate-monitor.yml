@@ -1,11 +1,11 @@
 name: Monitor official single-premium insurance rate sources
 on:
   schedule:
-    # Japan 10:17 on the 1st and 16th (GitHub cron uses UTC)
-    - cron: '17 1 1,16 * *'
+    # Japan 10:17 daily; catches publication delays after the 1st/16th
+    - cron: '17 1 * * *'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   issues: write
 jobs:
   monitor:
@@ -17,6 +17,18 @@ jobs:
           python-version: '3.12'
       - name: Check official source accessibility
         run: python scripts/monitor_rates.py
+      - name: Build read-only public monitoring status
+        run: python scripts/publish_monitor_status.py
+      - name: Publish status without changing insurance rates
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add rates/status.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update official-source monitoring status [skip ci]"
+            git push
+          fi
       - name: Save monitoring report
         uses: actions/upload-artifact@v4
         with:
