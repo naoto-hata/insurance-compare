@@ -6,11 +6,12 @@ import json
 import re
 import sys
 from pathlib import Path
-from apply_verified_rates import read_parts, SINGLE, PREFIX
+from apply_verified_rates import SINGLE, PREFIX
+from apply_verified_rates_v117 import read
 
 JST=dt.timezone(dt.timedelta(hours=9))
 today=dt.datetime.now(JST).date()
-outer,files=read_parts(Path("parts"))
+outer,files,loader=read()
 m=SINGLE.search(outer)
 if not m or len(SINGLE.findall(outer)) != 1:
     raise SystemExit("FAIL: single-premium iframe missing")
