@@ -7,8 +7,12 @@ import json
 import re
 import sys
 from pathlib import Path
-from apply_verified_rates import apply
-from validate_rates import validate
+try:
+    from scripts.apply_verified_rates import apply
+    from scripts.validate_rates import validate
+except ModuleNotFoundError:
+    from apply_verified_rates import apply
+    from validate_rates import validate
 
 ROOT=Path("v117")
 INDEX=Path("index.html")
