@@ -7,6 +7,8 @@ on:
       - 'tests/**'
       - 'rates/catalog.json'
       - 'rates/proposed.json'
+      - 'v117/**'
+      - 'index.html'
       - '.github/workflows/test-rate-data.yml'
   pull_request:
     paths:
