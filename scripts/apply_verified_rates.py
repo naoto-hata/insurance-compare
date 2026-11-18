@@ -88,14 +88,31 @@ def read_parts(folder):
         chunks.append(m.group(1))
     return base64.b64decode(''.join(chunks),validate=True).decode('utf-8'),files
 
-def write_parts(outer, files):
+def write_parts(outer, files, index_file=Path('index.html')):
     encoded=base64.b64encode(outer.encode('utf-8')).decode('ascii')
     size=400000
-    parts=[encoded[i:i+size] for i in range(0,len(encoded),size)]
-    if len(parts)!=len(files):
-        raise ValueError(f'Part count changed ({len(files)} -> {len(parts)}); abort')
-    for file,part in zip(files,parts):
-        file.write_text('window.__insuranceParts.push("'+part+'");',encoding='utf-8')
+    chunks=[encoded[i:i+size] for i in range(0,len(encoded),size)]
+    if len(chunks)!=len(files):
+        # Index loader must be updated in the same commit.
+        loader=index_file.read_text(encoding='utf-8')
+        script_re=re.compile(r'<script src="\./parts/part\d{3}\.js"></script>')
+        matches=script_re.findall(loader)
+        if len(matches)!=len(files):
+            raise ValueError('Index script count not equal to current parts')
+        expected=f'window.__insuranceParts.length!=={len(files)}'
+        if loader.count(expected)!=1:
+            raise ValueError('Cannot identify index part-count validation')
+        scripts=''.join(f'<script src="./parts/part{i:03d}.js"></script>' for i in range(len(chunks)))
+        loader=script_re.sub('',loader)
+        anchor='<script>try{if('
+        if loader.count(anchor)!=1:
+            raise ValueError('Index loader changed unexpectedly')
+        loader=loader.replace(anchor,scripts+anchor,1).replace(expected,f'window.__insuranceParts.length!=={len(chunks)}',1)
+        index_file.write_text(loader,encoding='utf-8')
+    directory=files[0].parent
+    for i,part in enumerate(chunks):
+        (directory/f'part{i:03d}.js').write_text('window.__insuranceParts.push("'+part+'");',encoding='utf-8')
+    for old in files[len(chunks):]: old.unlink()
 
 if __name__=='__main__':
     data=json.loads(Path('rates/approved.json').read_text(encoding='utf-8'))
