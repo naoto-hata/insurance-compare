@@ -43,7 +43,7 @@ jobs:
         run: |
           TITLE="利率の自動反映に失敗（要確認）"
           BODY="公式利率の自動反映がブロックされました。未確認値を公開せず停止しています。実行ログ: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          NUM=$(gh issue list --state open --limit 100 --json number,title --jq ".[] | select(.title == \\"$TITLE\\") | .number" | head -1)
+          NUM=$(gh issue list --state open --limit 100 --json number,title --jq ".[] | select(.title == \"$TITLE\") | .number" | head -1)
           if [ -z "$NUM" ]; then
             gh issue create --title "$TITLE" --body "$BODY"
           else
