@@ -24,13 +24,13 @@ jobs:
       - name: Validate approved rate records
         run: python scripts/validate_rates.py rates/approved.json
       - name: Update embedded single-premium data
-        run: python scripts/apply_verified_rates.py
+        run: python scripts/apply_verified_rates_v117.py
       - name: Publish only when the data actually changed
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A parts/ index.html
+          git add -A v117/ index.html
           if ! git diff --cached --quiet; then
             git commit -m "Apply verified single-premium rates [skip ci]"
             git push
