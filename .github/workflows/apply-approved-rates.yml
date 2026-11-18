@@ -1,0 +1,33 @@
+name: Apply independently approved interest rates to existing app
+on:
+  push:
+    paths:
+      - 'rates/approved.json'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: apply-approved-rates
+  cancel-in-progress: false
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate approved rate records
+        run: python scripts/validate_rates.py rates/approved.json
+      - name: Update embedded single-premium data
+        run: python scripts/apply_verified_rates.py
+      - name: Publish only when the data actually changed
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add parts/
+          if ! git diff --cached --quiet; then
+            git commit -m "Apply verified single-premium rates [skip ci]"
+            git push
+          fi
