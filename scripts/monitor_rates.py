@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Official-rate source monitor. Never treats downloaded text as a verified rate."""
 import datetime as dt
+import hashlib
 import json
 import os
 import re
@@ -32,16 +33,28 @@ for name, url in SOURCES:
             result = "PDF取得可・数値未照合"
         if len(decoded) < 150 and not body.startswith(b"%PDF"):
             result = "短い応答・要確認"
-        rows.append({"name": name, "url": url, "status": result, "http": status})
+        rows.append({"name": name, "url": url, "status": result, "http": status, "content_sha256": hashlib.sha256(body).hexdigest()})
     except Exception as exc:
-        rows.append({"name": name, "url": url, "status": "取得失敗・要確認", "error": str(exc)[:160]})
+        rows.append({"name": name, "url": url, "status": "取得失敗・要確認", "error": str(exc)[:160], "content_sha256": None})
+previous_status = {}
+try:
+    previous = json.loads(Path("rates/status.json").read_text(encoding="utf-8"))
+    previous_status = {r["product_id"]: r for r in previous.get("monitoring_results", [])}
+except (OSError, ValueError, KeyError):
+    pass
+name_to_id = {p["name"]: p["id"] for p in catalog["products"]}
+for r in rows:
+    earlier = previous_status.get(name_to_id[r["name"]], {})
+    fingerprint = r.get("content_sha256")
+    r["content_changed"] = (fingerprint is not None and earlier.get("content_sha256") is not None and fingerprint != earlier["content_sha256"])
 report = [f"# 一時払利率・公式情報監視 {period_start}～{period_end}日", "",
           f"実行日時: {now.strftime('%Y-%m-%d %H:%M JST')}", "",
           "**重要:** 公式URLへの到達確認のみ。新利率・通貨・期間・年齢・性別・定期支払率は未照合です。",
           "確認できない利率を自動掲載しません。公開アプリの利率データはこの処理では変更しません。", "",
           "| 商品 | 監視結果 | 公式URL |", "|---|---|---|"]
 for r in rows:
-    report.append(f"| {r['name']} | {r['status']} | [開く]({r['url']}) |")
+    changed = "／ページ内容に変化（利率変更とは限らない）" if r["content_changed"] else ""
+    report.append(f"| {r['name']} | {r['status']}{changed} | [開く]({r['url']}) |")
 report += ["", "数値の自動取得・突合・公開は各社ごとの検証済みパーサー実装後に有効化します。"]
 output = "\n".join(report)
 Path("rate-monitor-report.md").write_text(output, encoding="utf-8")
