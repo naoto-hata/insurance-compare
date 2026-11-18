@@ -15,7 +15,11 @@ for item in source.get("results", []):
         raise ValueError("Unknown catalog item")
     if item.get("status") not in allowed:
         raise ValueError("Unknown monitoring result")
-    results.append({"product_id": ids[item["name"]], "status": item["status"]})
+    digest = item.get("content_sha256")
+    if digest is not None and (not isinstance(digest, str) or len(digest) != 64 or any(ch not in "0123456789abcdef" for ch in digest)):
+        raise ValueError("Invalid source checksum")
+    results.append({"product_id": ids[item["name"]], "status": item["status"],
+                    "content_sha256": digest, "content_changed": bool(item.get("content_changed", False))})
 if len(results) != len(catalog["products"]) or len({r["product_id"] for r in results}) != len(results):
     raise ValueError("Missing or duplicate products in report")
 when = dt.datetime.fromisoformat(source["checked_at"])
