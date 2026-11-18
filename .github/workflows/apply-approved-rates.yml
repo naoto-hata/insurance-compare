@@ -1,5 +1,8 @@
 name: Apply independently approved interest rates to existing app
 on:
+  schedule:
+    # Japan 10:47 every day; publish previously approved rates on their effective date
+    - cron: '47 1 * * *'
   push:
     paths:
       - 'rates/approved.json'
