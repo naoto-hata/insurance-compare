@@ -1,0 +1,28 @@
+name: Test rate-data validation
+on:
+  push:
+    paths:
+      - 'scripts/validate_rates.py'
+      - 'scripts/publish_monitor_status.py'
+      - 'tests/**'
+      - 'rates/catalog.json'
+      - 'rates/proposed.json'
+      - '.github/workflows/test-rate-data.yml'
+  pull_request:
+    paths:
+      - 'scripts/**'
+      - 'tests/**'
+      - 'rates/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s tests -v
+      - run: python scripts/validate_rates.py rates/proposed.json
