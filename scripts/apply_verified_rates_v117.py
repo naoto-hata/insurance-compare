@@ -41,9 +41,9 @@ def read():
     loader=INDEX.read_text(encoding="utf-8")
     if len(SCRIPT_RE.findall(loader))!=len(files):
         raise ValueError("Index count differs from staged fragments")
-    length_match=re.search(r'page\.length!==(\\d+)',loader)
+    length_match=re.search(r'page\.length!==(\d+)',loader)
     hash_match=re.search(r'hash!==0x([0-9a-f]{8})',loader)
-    count_match=re.search(r'__insuranceV117\.length!==(\\d+)',loader)
+    count_match=re.search(r'__insuranceV117\.length!==(\d+)',loader)
     if not length_match or not hash_match or not count_match:
         raise ValueError("Unsupported v117 loader")
     if int(length_match.group(1))!=js_length(source):
