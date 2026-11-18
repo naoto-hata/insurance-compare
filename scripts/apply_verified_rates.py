@@ -12,8 +12,8 @@ import sys
 from pathlib import Path
 
 JST = dt.timezone(dt.timedelta(hours=9))
-PART = re.compile(r'^window\\.__insuranceParts\\.push\\("([A-Za-z0-9+/=]+)"\\);?\\s*$', re.S)
-SINGLE = re.compile(r'(<iframe\\b[^>]*\\bid="single"[^>]*\\bsrcdoc=")(.*?)(")', re.S)
+PART = re.compile(r'^window\.__insuranceParts\.push\("([A-Za-z0-9+/=]+)"\);?\s*$', re.S)
+SINGLE = re.compile(r'(<iframe\b[^>]*\bid="single"[^>]*\bsrcdoc=")(.*?)(")', re.S)
 PREFIX = 'const PRODUCTS='
 
 def apply(outer, rows, today=None):
@@ -106,7 +106,7 @@ if __name__=='__main__':
     from validate_rates import validate
     errors=validate(rows)
     if errors:
-        raise SystemExit('\\n'.join(errors))
+        raise SystemExit('\n'.join(errors))
     old,files=read_parts(Path('parts'))
     newer,count=apply(old,rows)
     if count:
