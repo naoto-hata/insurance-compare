@@ -1,0 +1,30 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>一時払利率・公式情報の監視状況</title>
+<style>body{font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;background:#f4f7fb;color:#233348;margin:0}main{max-width:920px;margin:auto;padding:20px}h1{font-size:23px}p{line-height:1.7}.note{padding:15px;border-radius:9px;background:#fff4d4;border:1px solid #e5ce94}.card{background:white;border:1px solid #dae3ed;border-radius:10px;padding:13px;margin:9px 0;display:flex;justify-content:space-between;gap:12px;align-items:center}.small{font-size:13px;color:#52657a}.pill{font-size:12px;padding:5px 8px;border-radius:8px;background:#ecf0f5}a{color:#12569a} @media(max-width:650px){.card{display:block}.pill{display:inline-block;margin:7px 0}}</style>
+</head><body><main><h1>一時払保険・公式情報の監視状況</h1><div class="note"><strong>この画面は「公式サイトへの到達状況」です。</strong> 利率の検証・更新状況を示すものではありません。数値未確認のまま募集資料に転用しないでください。既存の比較アプリの利率は、この監視結果によって変更されません。</div><p id="checked">監視結果を確認しています…</p><div id="items"></div><p><a href="../">保険比較アプリに戻る</a></p></main>
+<script>
+(async()=>{
+const $=id=>document.getElementById(id);
+try{
+const [catalogResponse,statusResponse]=await Promise.all([fetch('./catalog.json',{cache:'no-store'}),fetch('./status.json',{cache:'no-store'})]);
+if(!catalogResponse.ok||!statusResponse.ok)throw Error('情報を取得できません');
+const c=await catalogResponse.json(),s=await statusResponse.json();
+if(s.schema_version!==1||!Array.isArray(c.products)||!Array.isArray(s.monitoring_results))throw Error('形式が正しくありません');
+const date=s.checked_at?new Date(s.checked_at):null;
+const age=date?Date.now()-date.getTime():Infinity;
+const stale=!(age>=-300000 && age<=17*86400000);
+$('checked').textContent=date?'最終監視：'+date.toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'})+(stale?'（監視結果が古い可能性があります）':''):'まだ実行結果がありません';
+const statuses=new Map(s.monitoring_results.map(r=>[r.product_id,r.status]));
+for(const p of c.products){
+ const el=document.createElement('div');el.className='card';
+ const left=document.createElement('div');
+ const title=document.createElement('strong');title.textContent=p.name;
+ const link=document.createElement('div');link.className='small';
+ const a=document.createElement('a');a.href=p.official_url;a.rel='noopener noreferrer';a.target='_blank';a.textContent='公式ページを開く';link.append(a);
+ left.append(title,link);
+ const state=document.createElement('span');state.className='pill';
+ state.textContent=stale?'要確認（監視結果が古い）':(statuses.get(p.id)||'監視結果なし');
+ el.append(left,state);$('items').append(el);
+}
+}catch(err){$('checked').textContent='監視結果の読み込みに失敗しました。GitHub Actionsの実行状況を確認してください。'}
+})();
+</script></body></html>
