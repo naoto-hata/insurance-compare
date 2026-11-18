@@ -1,0 +1,39 @@
+name: Monitor official single-premium insurance rate sources
+on:
+  schedule:
+    # Japan 10:17 on the 1st and 16th (GitHub cron uses UTC)
+    - cron: '17 1 1,16 * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check official source accessibility
+        run: python scripts/monitor_rates.py
+      - name: Save monitoring report
+        uses: actions/upload-artifact@v4
+        with:
+          name: rate-monitor-report
+          path: |
+            rate-monitor-report.md
+            rate-monitor-report.json
+      - name: Create or update a review issue per half month
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          PERIOD=$(python -c "import json;print(json.load(open('rate-monitor-report.json'))['period'])")
+          TITLE="一時払利率の公式確認: ${PERIOD}"
+          EXISTING=$(gh issue list --state all --limit 100 --json number,title --jq ".[] | select(.title == \"$TITLE\") | .number" | head -1)
+          if [ -z "$EXISTING" ]; then
+            gh issue create --title "$TITLE" --body-file rate-monitor-report.md
+          else
+            gh issue edit "$EXISTING" --body-file rate-monitor-report.md
+          fi
