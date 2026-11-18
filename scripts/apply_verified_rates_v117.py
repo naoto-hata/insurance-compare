@@ -56,7 +56,7 @@ def read():
         raise ValueError("Public source checksum mismatch")
     if int(count_match.group(1))!=len(files):
         raise ValueError("Public source part count mismatch")
-    if "第117版・一時払利率11月16日確認" not in source:
+    if "第117版" not in source:
         raise ValueError("Missing v117 release marker")
     return source,files,loader
 
@@ -106,6 +106,16 @@ def main():
     if not count:
         print("No currently effective approved rate changes")
         return
+    today=dt.datetime.now(dt.timezone(dt.timedelta(hours=9))).date()
+    starts=[dt.date.fromisoformat(r["valid_from"]) for r in records
+            if r["verification"]=="approved" and
+            dt.date.fromisoformat(r["valid_from"])<=today<=dt.date.fromisoformat(r["valid_to"])]
+    if starts:
+        newest=max(starts)
+        label=f"第117版・一時払利率{newest.month}月{newest.day}日適用分"
+        updated,replaced=re.subn(r"第117版・一時払利率\d{1,2}月\d{1,2}日(?:確認|適用分)",label,updated,count=1)
+        if replaced!=1:
+            raise ValueError("Cannot update displayed rate period")
     write(updated,files,loader)
     print(f"Applied {count} condition(s), retaining prior periods")
 
