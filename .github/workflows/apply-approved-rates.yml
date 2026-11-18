@@ -9,6 +9,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  issues: write
 concurrency:
   group: apply-approved-rates
   cancel-in-progress: false
@@ -33,4 +34,18 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "Apply verified single-premium rates [skip ci]"
             git push
+          fi
+      - name: Record blocked publication for review
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          TITLE="利率の自動反映に失敗（要確認）"
+          BODY="公式利率の自動反映がブロックされました。未確認値を公開せず停止しています。実行ログ: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          NUM=$(gh issue list --state open --limit 100 --json number,title --jq ".[] | select(.title == \\"$TITLE\\") | .number" | head -1)
+          if [ -z "$NUM" ]; then
+            gh issue create --title "$TITLE" --body "$BODY"
+          else
+            gh issue comment "$NUM" --body "$BODY"
           fi
