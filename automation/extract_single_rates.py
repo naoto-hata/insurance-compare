@@ -31,8 +31,9 @@ def load_embedded_single(repo):
         chunks.append(json.loads(m.group(1)))
     page = "".join(chunks)
     # v117 wrapper pins the exact length; reject partial or changed releases.
-    if len(page) != 11251223:
-        raise ValueError(f"Unexpected v117 length {len(page)}")
+    utf16_length = len(page.encode("utf-16-le")) // 2
+    if utf16_length != 11251223:
+        raise ValueError(f"Unexpected v117 UTF-16 length {utf16_length}")
     match = IFRAME_RE.search(page)
     if not match:
         raise ValueError("Single-premium iframe srcdoc not found")
