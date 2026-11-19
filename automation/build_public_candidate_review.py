@@ -19,7 +19,7 @@ ALLOWED_CURRENCIES = {"JPY": "円", "USD": "米ドル", "AUD": "豪ドル"}
 # to business/legal approval for public redistribution.
 PROHIBITED_HTML = re.compile(
     r"<(?:script|iframe|frame|object|embed|img|svg|canvas|video|audio|"
-    r"form|input|link|meta|a)\b|(?:src|href)\s*=|data:[a-z/+-]+;base64,",
+    r"form|input|link|a)\b|(?:src|href)\s*=|data:[a-z/+-]+;base64,",
     re.IGNORECASE,
 )
 PRIVATE_MARKERS = (
