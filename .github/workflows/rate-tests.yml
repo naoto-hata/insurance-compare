@@ -65,3 +65,5 @@ jobs:
           PY
       - name: Inventory embedded assets by metadata only (no document contents)
         run: python automation/inventory_embedded_assets.py
+      - name: Enforce no-artifact and read-only rate workflow policy
+        run: python automation/check_rate_workflows.py
