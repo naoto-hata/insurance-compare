@@ -63,7 +63,7 @@ def stage(snapshot, sources, audit, candidates, today):
         if not isinstance(row, dict):
             errors.append(f"{prefix}: not an object")
             continue
-        missing = [k for k in REQUIRED_RECORD_FIELDS if k not in row or row[k] is None]
+        missing = [k for k in REQUIRED_RECORD_FIELDS if k not in row or (k != "payout" and row[k] is None)]
         if missing:
             errors.append(f"{prefix}: missing {missing}")
             continue
