@@ -16,3 +16,24 @@
 5. テストを通ったデータのみ原子的に `main` へ反映、GitHub Pages公開後の表示チェックを行う。不一致時は前回の正しい版に戻すか確認待ち表示を維持する。
 
 **重要**: 公式ページが閲覧できることと、数値が正しく取得できたことは別。現段階は監視基盤であり「完全無人公開の完成」を意味しない。
+
+
+## 2026-11-19 実装到達点
+
+- **3商品54条件**の実際の公式HTML取得と条件検証を確認済み。プレミアプレゼント5: 22、プレミアレシーブ2: 30、Moonshot: 2。
+- GitHub Actions の pull request テストは公式サイトの実データによる全体プレビュー生成を実行する。
+- 同テストで `insurance-rate-review-preview` という成果物を最大7日保持する。ZIPには `index.html` と `v118/part*.js`、`REVIEW_MANIFEST.json` を含む。これは **公開サイトではない**。
+- プレビューは正規の設計書・募集資料の代替ではなく、残る商品の現行利率は未検証。古い期間の利率を現行へ流用しない。
+- 未対応10商品のうち、そもそも利率公表がない商品や取扱が異なる商品も含まれる。全商品を同じ半月更新周期と決めつけない。
+- 自動本番公開はまだ有効化しない。検証未対応商品の表示の見直し・公開後のPC/スマホ試験・失敗通知・自動復旧が残っている。
+
+### 成果物を確認する手順
+1. GitHub PR #1 の `Checks` で `Rate automation regression checks` の成功を確認
+2. 実行画面の `Artifacts` から `insurance-rate-review-preview` を取得
+3. ZIPを展開し、展開したフォルダー内の `index.html` をブラウザーで開く（`v118` フォルダーも同じ階層に置く）
+4. 現行公開版と見比べる。未確認商品の期間表示と確認待ち、通貨・年齢・性別・プラン切替を確認
+
+### リリース前の必須ゲート
+- 必ず official source -> data parser -> dimension check -> reviewer preview -> browser regression -> deployment -> post-deploy checks の順で進める
+- `publication_allowed:false` のプレビュー／データは、本番公開に用いてはならない
+- `main` へこのPRをそのままマージしない
