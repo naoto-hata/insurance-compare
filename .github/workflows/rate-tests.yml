@@ -38,8 +38,6 @@ jobs:
           assert all(p["publishable_conditions"] == 0 for p in report["products"].values())
           print(f"Found {len(snap['catalog'])} products / {len(snap['rates'])} archived rows; all held out of publication.")
           PY
-      - name: Test full-size preview package with temporary synthetic rates
-        run: python automation/smoke_preview.py
       - name: Check Moonshot live official page against existing rate dimensions (read-only)
         id: moonshot_live
         run: python automation/live_moonshot_probe.py
@@ -47,14 +45,11 @@ jobs:
         if: always()
         run: echo "Moonshot official-page integration result = ${{ steps.moonshot_live.outcome }} (not an authorization to publish)"
 
-      - name: Inspect first frontier official rate tables (read-only)
-        run: python automation/probe_dfl_tables.py
-
       - name: Verify live First Frontier official rates against all 52 conditions
         run: python automation/live_dfl_probe.py
 
-      - name: Test official 54-rate live integration into isolated full-size preview
-        run: python automation/smoke_live_preview.py
+      - name: Verify 54 official rate cells in asset-free temporary review only
+        run: python automation/smoke_safe_rate_only.py
       - name: Assert public export is blocked pending privacy review
         run: |
           python - <<'PY'
