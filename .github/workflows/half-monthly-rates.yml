@@ -4,7 +4,7 @@ on:
     - cron: '15 1 * * *' # 10:15 Japan time, daily retry after 1st/16th
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: rate-source-audit
   cancel-in-progress: false
@@ -27,12 +27,15 @@ jobs:
         run: python automation/audit_sources.py
       - name: Stage 54 verified conditions from audited source bytes (not published)
         run: python automation/stage_audited_sources.py
-      - name: Save audit result (not insurance rate values)
+      - name: Confirm release remains disabled and no output gets committed
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add automation/source-audit.json automation/v117-rate-snapshot.json automation/rate-coverage.json
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: refresh official rate-source audit"
-            git push
-          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          source = json.loads(Path("automation/source-audit.json").read_text(encoding="utf-8"))
+          assert all(row.get("automatically_published") is False for row in source["sources"])
+          stage = json.loads(Path("/tmp/insurance-rate-staged.json").read_text(encoding="utf-8"))
+          assert stage["release_stage"] == "VALIDATED_NOT_PUBLISHED"
+          assert len(stage["records"]) == 54
+          print("Read-only audit passed. No rate or asset publication.")
+          PY
