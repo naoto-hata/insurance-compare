@@ -52,3 +52,6 @@ jobs:
 
       - name: Verify live First Frontier official rates against all 52 conditions
         run: python automation/live_dfl_probe.py
+
+      - name: Test official 54-rate live integration into isolated full-size preview
+        run: python automation/smoke_live_preview.py
