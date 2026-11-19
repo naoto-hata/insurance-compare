@@ -21,13 +21,15 @@ jobs:
         run: python -m unittest discover -s automation -p 'test_*.py' -v
       - name: Extract archived embedded rates for independent verification
         run: python automation/extract_single_rates.py
+      - name: Report current-rate coverage (never auto-approve)
+        run: python automation/rate_coverage.py
       - name: Check official sources and update audit report
         run: python automation/audit_sources.py
       - name: Save audit result (not insurance rate values)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add automation/source-audit.json automation/v117-rate-snapshot.json
+          git add automation/source-audit.json automation/v117-rate-snapshot.json automation/rate-coverage.json
           if ! git diff --cached --quiet; then
             git commit -m "chore: refresh official rate-source audit"
             git push
