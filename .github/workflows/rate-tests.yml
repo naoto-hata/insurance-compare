@@ -68,3 +68,5 @@ jobs:
           assert "PRIVATE_SECTION_EMBEDDED" in report["finding_codes"]
           print("PASS: Public export blocked; no private/internal assets uploaded.")
           PY
+      - name: Inventory embedded assets by metadata only (no document contents)
+        run: python automation/inventory_embedded_assets.py
