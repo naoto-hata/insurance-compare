@@ -1,0 +1,30 @@
+name: Half-monthly insurance rate source audit
+on:
+  schedule:
+    - cron: '15 1 * * *' # 10:15 Japan time, daily retry after 1st/16th
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: rate-source-audit
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check official sources and update audit report
+        run: python automation/audit_sources.py
+      - name: Save audit result (not insurance rate values)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add automation/source-audit.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: refresh official rate-source audit"
+            git push
+          fi
