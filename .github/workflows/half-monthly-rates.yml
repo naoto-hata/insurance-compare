@@ -25,6 +25,15 @@ jobs:
         run: python automation/rate_coverage.py
       - name: Check official sources and update audit report
         run: python automation/audit_sources.py
+      - name: Extract and stage Moonshot from exact audited HTML (not published)
+        shell: bash
+        run: |
+          if [ -f /tmp/insurance-rate-source-cache/moon.html ]; then
+            python automation/parse_moonshot.py --html /tmp/insurance-rate-source-cache/moon.html
+            python automation/stage_rates.py --candidates automation/moonshot-candidates.json
+          else
+            echo 'Moonshot source unavailable; rate update held for review'
+          fi
       - name: Save audit result (not insurance rate values)
         run: |
           git config user.name "github-actions[bot]"
