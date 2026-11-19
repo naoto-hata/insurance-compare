@@ -79,6 +79,24 @@ def apply_rates(page, staged):
     # Critical: ensure only a single array changed and all unrelated iframe content remains untouched.
     if result[:match.start(1)] != page[:match.start(1)] or result.endswith(page[match.end(1):]) is False:
         raise ValueError("Unexpected non-rate modification")
+    # Replace stale human-facing v117 release claims in the review package.
+    # They would otherwise falsely state that unverified FWD/Sony values were
+    # independently rechecked in this run.
+    review_date = staged["checked_at_jst"][:10]
+    verified_count = len(staged["records"])
+    verified_products = len(updates)
+    old_heading = "一時払利率チェック：2026年11月16日／5商品67条件を更新"
+    if old_heading in result:
+        result = result.replace(
+            old_heading,
+            f"一時払利率：{review_date}確認／{verified_products}商品{verified_count}条件を照合・その他は確認待ち"
+        )
+    old_sentence = ("2026年11月16日確認：プレミアプレゼント5・プレミアレシーブ2・FWD・"
+                    "ムーンショット・ソニー生命の5商品67条件を11月16～30日の公式利率に更新。")
+    if old_sentence in result:
+        new_sentence = (f"{review_date}照合：{verified_products}商品{verified_count}条件を公式情報から取得。"
+                        "今回照合していない利率は現行値として表示せず、確認待ちとする。")
+        result = result.replace(old_sentence, new_sentence)
     return result
 
 def fnv1a_codepoints(page):
