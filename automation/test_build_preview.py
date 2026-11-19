@@ -45,6 +45,16 @@ class PreviewBuilderTests(unittest.TestCase):
         updated=apply_rates(self.page,self.staged)
         products=json.loads(html.unescape(updated.split("const PRODUCTS=")[1].split(";</script>")[0]))
         self.assertEqual(products[2],self.products[2])
+    def test_stale_release_claims_replaced_in_review_only(self):
+        old_heading="一時払利率チェック：2026年11月16日／5商品67条件を更新"
+        old_note=("2026年11月16日確認：プレミアプレゼント5・プレミアレシーブ2・FWD・"
+                  "ムーンショット・ソニー生命の5商品67条件を11月16～30日の公式利率に更新。")
+        page=self.page+old_heading+old_note
+        updated=apply_rates(page,self.staged)
+        self.assertNotIn(old_heading,updated)
+        self.assertNotIn(old_note,updated)
+        self.assertIn("1商品2条件を照合・その他は確認待ち",updated)
+        self.assertIn("今回照合していない利率は現行値として表示せず",updated)
     def test_wrong_release_blocked(self):
         stage={**self.staged,"catalog_release":"v999"}
         with self.assertRaises(ValueError):
