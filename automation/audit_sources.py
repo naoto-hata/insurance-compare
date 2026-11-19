@@ -30,10 +30,10 @@ def check(source):
             data = response.read(MAX_BYTES + 1)
             if len(data) > MAX_BYTES:
                 return {"status": "error", "reason": "Source exceeds safety size limit"}
-            if source["id"] == "moon":
+            if source["id"] in ("moon", "present", "receive"):
                 cache = pathlib.Path(os.environ.get("RATE_SOURCE_CACHE", "/tmp/insurance-rate-source-cache"))
                 cache.mkdir(parents=True, exist_ok=True)
-                (cache / "moon.html").write_bytes(data)
+                (cache / (source["id"] + ".html")).write_bytes(data)
             return {"status": "reachable", "http_status": response.status,
                     "sha256": hashlib.sha256(data).hexdigest(),
                     "content_type": response.headers.get("Content-Type", "").split(";")[0]}
