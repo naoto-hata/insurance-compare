@@ -53,7 +53,7 @@ def apply_rates(page, staged):
         updates.setdefault(pid, []).append(rate)
     if sorted(updates) != sorted(staged.get("source_products", [])):
         raise ValueError("Staged product list mismatch")
-    for pid, new_rows in updates.items():
+    # A bundled rate is NOT automatically official merely because its date is current.\n    # Any current-window rows not verified in this run must be held out.\n    for pid, product in by_id.items():\n        if pid in updates:\n            continue\n        original = product.get("rates", [])\n        blocked = [r for r in original if r.get("period") == staged["period"]]\n        if blocked:\n            product["rates"] = [r for r in original if r.get("period") != staged["period"]]\n            product["rateReview"] = "この適用期間の公式利率は今回未確認。旧版を現行値として表示しない。"\n            product["missingReason"] = "今回の対象期間の利率は確認待ち。公式利率ページ・設計書で確認してください。"\n    for pid, new_rows in updates.items():
         p = by_id[pid]
         old_rows = p["rates"]
         old_set = {(r["currency"],r["label"],r["term"],r["lo"],r["hi"]) for r in old_rows}
