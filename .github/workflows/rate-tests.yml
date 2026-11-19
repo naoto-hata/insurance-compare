@@ -40,3 +40,10 @@ jobs:
           PY
       - name: Test full-size preview package with temporary synthetic rates
         run: python automation/smoke_preview.py
+      - name: Check Moonshot live official page against existing rate dimensions (read-only)
+        id: moonshot_live
+        continue-on-error: true
+        run: python automation/live_moonshot_probe.py
+      - name: Report live Moonshot probe state
+        if: always()
+        run: echo "Moonshot official-page integration result = ${{ steps.moonshot_live.outcome }} (not an authorization to publish)"
