@@ -14,6 +14,7 @@ from build_preview import PRODUCTS, apply_rates, load_page, generate_preview
 from parse_dfl import extract as extract_dfl, fetch as fetch_dfl, JST
 from parse_moonshot import parse_official_html, SOURCE_URL
 from stage_rates import stage
+from build_public_candidate_review import build_review_html, verify_safe_html
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -44,6 +45,10 @@ def main():
                 "checked_at_jst":now.isoformat(timespec="seconds")})
     staged=stage(snapshot,sources,{"sources":aud},{"records":records},now.date())
     assert len(staged["records"]) == 54, "Expected 22 + 30 + 2"
+    safe_review=build_review_html(staged)
+    assert verify_safe_html(safe_review)
+    assert len(safe_review.encode("utf-8")) < 75_000
+    print("PUBLIC-CANDIDATE-ONLY HTML BUILT AND PRIVACY-GATED (never deployed):",len(safe_review.encode("utf-8")),"bytes")
     original=load_page(REPO)
     updated=apply_rates(original,staged)
     lists=list(PRODUCTS.finditer(updated))
