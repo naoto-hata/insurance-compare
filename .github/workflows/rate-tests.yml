@@ -1,0 +1,38 @@
+name: Rate automation regression checks
+on:
+  pull_request:
+    paths:
+      - 'automation/**'
+      - '.github/workflows/half-monthly-rates.yml'
+      - '.github/workflows/rate-tests.yml'
+      - 'v117/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit tests
+        run: python -m unittest discover -s automation -p 'test_*.py' -v
+      - name: Extract v117 embedded rates
+        run: python automation/extract_single_rates.py
+      - name: Check coverage and archived-only flags
+        run: |
+          python automation/rate_coverage.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("automation")
+          snap = json.loads((root / "v117-rate-snapshot.json").read_text())
+          report = json.loads((root / "rate-coverage.json").read_text())
+          assert snap["publication_allowed"] is False
+          assert report["rate_publication_allowed"] is False
+          assert all(p["publishable_conditions"] == 0 for p in report["products"].values())
+          print(f"Found {len(snap['catalog'])} products / {len(snap['rates'])} archived rows; all held out of publication.")
+          PY
