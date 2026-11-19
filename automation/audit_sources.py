@@ -12,7 +12,7 @@ ROOT = pathlib.Path(__file__).resolve().parent
 CONFIG = ROOT / "sources.json"
 OUTPUT = ROOT / "source-audit.json"
 MAX_BYTES = 3_000_000
-ALLOWED_HOSTS = {"www.d-frontier-life.co.jp", "customer2.fwdlife.co.jp"}
+ALLOWED_HOSTS = ["www.metlife.co.jp","www.d-frontier-life.co.jp","www2.axa.co.jp","www.manulife.co.jp","www.medicarelife.com","customer.fwdlife.co.jp","www.orixlife.co.jp","www.gib-life.co.jp","www.sonylife.co.jp"]
 JST = dt.timezone(dt.timedelta(hours=9))
 
 def check(source):
