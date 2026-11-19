@@ -45,7 +45,7 @@ def verify_safe_html(document):
         raise ValueError("Executable, linked or embedded content forbidden")
     if any(marker in document for marker in PRIVATE_MARKERS):
         raise ValueError("Confidentiality marker in HTML")
-    if document.count("<tr>") != 54:
+    if document.count("<tr><td>") != 54:
         raise ValueError("Expected 54 rate rows in review table")
     if len(document.encode("utf-8")) > 75_000:
         raise ValueError("Unexpectedly large review page")
