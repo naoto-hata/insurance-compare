@@ -46,3 +46,6 @@ jobs:
       - name: Report live Moonshot probe state
         if: always()
         run: echo "Moonshot official-page integration result = ${{ steps.moonshot_live.outcome }} (not an authorization to publish)"
+
+      - name: Inspect first frontier official rate tables (read-only)
+        run: python automation/probe_dfl_tables.py
