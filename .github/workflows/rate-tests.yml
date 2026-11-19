@@ -55,12 +55,16 @@ jobs:
 
       - name: Test official 54-rate live integration into isolated full-size preview
         run: python automation/smoke_live_preview.py
-      - name: Package a review-only offline preview from 54 current official conditions
-        run: python automation/prepare_review_preview.py
-      - name: Upload preview artifact for private review (never deploy)
-        uses: actions/upload-artifact@v4
-        with:
-          name: insurance-rate-review-preview
-          path: ${{ runner.temp }}/insurance-review-preview/
-          retention-days: 7
-          if-no-files-found: error
+      - name: Assert public export is blocked pending privacy review
+        run: |
+          python - <<'PY'
+          import sys
+          sys.path.insert(0, "automation")
+          from security_gate import inspect
+          from build_preview import load_page
+          from pathlib import Path
+          report = inspect(load_page(Path(".")))
+          assert report["publication_allowed"] is False
+          assert "PRIVATE_SECTION_EMBEDDED" in report["finding_codes"]
+          print("PASS: Public export blocked; no private/internal assets uploaded.")
+          PY
