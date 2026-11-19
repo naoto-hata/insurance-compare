@@ -54,7 +54,14 @@ def main():
     for new,old in zip(modified,original_products):
         assert new["id"]==old["id"]
         if new["id"] not in changed:
-            assert new==old,"Unrelated product changed"
+            old_current=[r for r in old["rates"] if r["period"]==staged["period"]]
+            new_current=[r for r in new["rates"] if r["period"]==staged["period"]]
+            assert not new_current, "Unverified current-period rate was left visible"
+            if not old_current:
+                assert new==old, "Unrelated product with no current rates changed"
+            else:
+                assert len(new["rates"])==len(old["rates"])-len(old_current), "Unexpected historical rate change"
+                assert new.get("missingReason"), "Missing explicit review warning"
         else:
             current=[r for r in new["rates"] if r["period"]==staged["period"]]
             expected={"present":22,"receive":30,"moon":2}[new["id"]]
