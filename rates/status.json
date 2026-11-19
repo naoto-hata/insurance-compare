@@ -1,7 +1,86 @@
 {
   "schema_version": 1,
-  "checked_at": null,
+  "checked_at": "2026-11-19T17:50:42.886040+09:00",
   "rate_data_updated": false,
   "rate_verification": "not_performed",
-  "monitoring_results": []
+  "monitoring_results": [
+    {
+      "product_id": "sunny",
+      "status": "取得失敗・要確認",
+      "content_sha256": null,
+      "content_changed": false
+    },
+    {
+      "product_id": "bewithusd",
+      "status": "取得失敗・要確認",
+      "content_sha256": null,
+      "content_changed": false
+    },
+    {
+      "product_id": "bewithjpy",
+      "status": "取得失敗・要確認",
+      "content_sha256": null,
+      "content_changed": false
+    },
+    {
+      "product_id": "present",
+      "status": "取得可・数値未照合",
+      "content_sha256": "e06b6d110384bc207b97b651672e9d2bd25f982b807c6290ab24b21cde71954e",
+      "content_changed": false
+    },
+    {
+      "product_id": "receive",
+      "status": "取得可・数値未照合",
+      "content_sha256": "9ea5a643651c605c6df2cbfa7a190a8649f4ebf473ddea8cc8e129a34cd445a9",
+      "content_changed": false
+    },
+    {
+      "product_id": "upside",
+      "status": "取得可・数値未照合",
+      "content_sha256": "a0c9babcbbbd9b4d96839ba0e247bafb15096582277a5ca50d0902907887cd07",
+      "content_changed": false
+    },
+    {
+      "product_id": "enjoy",
+      "status": "取得失敗・要確認",
+      "content_sha256": null,
+      "content_changed": false
+    },
+    {
+      "product_id": "connect",
+      "status": "取得失敗・要確認",
+      "content_sha256": null,
+      "content_changed": false
+    },
+    {
+      "product_id": "medicare",
+      "status": "取得可・数値未照合",
+      "content_sha256": "8c6e81268b76b5ff4de4bf66c31305787a46251377dc0371f40acc9d0903a24b",
+      "content_changed": false
+    },
+    {
+      "product_id": "fwd",
+      "status": "取得失敗・要確認",
+      "content_sha256": null,
+      "content_changed": false
+    },
+    {
+      "product_id": "moon",
+      "status": "取得可・数値未照合",
+      "content_sha256": "ab07840fcebe987a0ff117366fd553d88e1124f174e06827f4cc301e2fd0110d",
+      "content_changed": false
+    },
+    {
+      "product_id": "gib",
+      "status": "取得可・数値未照合",
+      "content_sha256": "ecb3b933f33671df0c2301c8a33e0799a2afe4d31a68139c908a58fc26478c67",
+      "content_changed": false
+    },
+    {
+      "product_id": "sony",
+      "status": "取得失敗・要確認",
+      "content_sha256": null,
+      "content_changed": false
+    }
+  ]
 }
