@@ -55,3 +55,12 @@ jobs:
 
       - name: Test official 54-rate live integration into isolated full-size preview
         run: python automation/smoke_live_preview.py
+      - name: Package a review-only offline preview from 54 current official conditions
+        run: python automation/prepare_review_preview.py
+      - name: Upload preview artifact for private review (never deploy)
+        uses: actions/upload-artifact@v4
+        with:
+          name: insurance-rate-review-preview
+          path: ${{ runner.temp }}/insurance-review-preview/
+          retention-days: 7
+          if-no-files-found: error
