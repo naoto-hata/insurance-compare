@@ -15,6 +15,7 @@ from parse_dfl import extract as extract_dfl, fetch as fetch_dfl, JST
 from parse_moonshot import parse_official_html, SOURCE_URL
 from stage_rates import stage
 from build_public_candidate_review import build_review_html, verify_safe_html
+from check_public_package import check_package
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -48,7 +49,13 @@ def main():
     safe_review=build_review_html(staged)
     assert verify_safe_html(safe_review)
     assert len(safe_review.encode("utf-8")) < 75_000
-    print("PUBLIC-CANDIDATE-ONLY HTML BUILT AND PRIVACY-GATED (never deployed):",len(safe_review.encode("utf-8")),"bytes")
+    with tempfile.TemporaryDirectory() as candidate_root:
+        public_dir=pathlib.Path(candidate_root)
+        (public_dir/"index.html").write_text(safe_review,encoding="utf-8")
+        security=check_package(public_dir)
+        assert security["publication_allowed"] is False
+        assert security["files"]==["index.html"]
+    print("PUBLIC-CANDIDATE-ONLY HTML BUILT AND DIRECTORY-GATED (never deployed):",len(safe_review.encode("utf-8")),"bytes")
     original=load_page(REPO)
     updated=apply_rates(original,staged)
     lists=list(PRODUCTS.finditer(updated))
