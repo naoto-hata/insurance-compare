@@ -49,3 +49,6 @@ jobs:
 
       - name: Inspect first frontier official rate tables (read-only)
         run: python automation/probe_dfl_tables.py
+
+      - name: Verify live First Frontier official rates against all 52 conditions
+        run: python automation/live_dfl_probe.py
