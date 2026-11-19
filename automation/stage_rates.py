@@ -7,8 +7,8 @@ The updater is intentionally fail-closed:
   updates that silently keep last period's values).
 - The source URL must match that product's registered official rate URL.
 - An independently obtained source SHA-256 must match the source audit.
-- Two independent source-specific parser proofs are required: a concrete
-  locator and a verified machine-readable evidence entry per condition.
+- Source-specific extraction evidence is required (a concrete locator and
+  machine-readable text per condition). It is not independent human verification.
 - The period must be the current Japan-local 1–15 / 16–last-day window.
 - No bundled 2026 historical rate is used as a fallback.
 
@@ -68,6 +68,9 @@ def stage(snapshot, sources, audit, candidates, today):
             errors.append(f"{prefix}: missing {missing}")
             continue
         pid = row["product_id"]
+        if not isinstance(pid, str):
+            errors.append(f"{prefix}: invalid product ID")
+            continue
         if pid not in entries or pid not in source_map or pid not in audit_map:
             errors.append(f"{prefix}: product is not in all approved catalogs")
             continue
@@ -111,6 +114,9 @@ def stage(snapshot, sources, audit, candidates, today):
         except (ValueError, TypeError):
             errors.append(f"{prefix}: invalid numeric rate")
         payout = row["payout"]
+        baseline = next((old for old in snapshot["rates"] if old["product_id"] == pid and dimension(old) == dimension(row)), None)
+        if baseline is not None and ((baseline.get("payout") is None) != (payout is None)):
+            errors.append(f"{prefix}: payout schema differs from expected product condition")
         if payout is not None:
             if not isinstance(payout, dict) or set(payout) != {"male", "female"}:
                 errors.append(f"{prefix}: male/female payout pair is required")
