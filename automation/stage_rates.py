@@ -36,7 +36,10 @@ REQUIRED_RECORD_FIELDS = (
 )
 
 def dimension(row):
-    return tuple(str(row[k]) for k in ("currency", "label", "term", "lo", "hi"))
+    # Extracted v117 archives use age_min/age_max; validated candidates use lo/hi.
+    low = row["lo"] if "lo" in row else row["age_min"]
+    high = row["hi"] if "hi" in row else row["age_max"]
+    return tuple(str(x) for x in (row["currency"], row["label"], row["term"], low, high))
 
 def fail(reason):
     raise ValueError(reason)
