@@ -42,7 +42,6 @@ jobs:
         run: python automation/smoke_preview.py
       - name: Check Moonshot live official page against existing rate dimensions (read-only)
         id: moonshot_live
-        continue-on-error: true
         run: python automation/live_moonshot_probe.py
       - name: Report live Moonshot probe state
         if: always()
