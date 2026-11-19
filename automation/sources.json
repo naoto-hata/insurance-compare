@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "note": "Official source monitoring only. These pages are NOT treated as machine-verified rate rows. Published rate values must pass a separate source-specific parser and validity checks.",
+  "sources": [
+    {
+      "id": "dfl_premium_present5",
+      "company": "第一フロンティア生命",
+      "product": "プレミアプレゼント5",
+      "url": "https://www.d-frontier-life.co.jp/products/product.html?agency=307&product=224",
+      "type": "official_landing"
+    },
+    {
+      "id": "fwd_yen_annuity",
+      "company": "FWD生命",
+      "product": "FWD円建一時払変額年金",
+      "url": "https://customer2.fwdlife.co.jp/ConservationWS/H2010/show.do",
+      "type": "official_rate_page"
+    }
+  ]
+}
