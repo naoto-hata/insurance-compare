@@ -38,3 +38,5 @@ jobs:
           assert all(p["publishable_conditions"] == 0 for p in report["products"].values())
           print(f"Found {len(snap['catalog'])} products / {len(snap['rates'])} archived rows; all held out of publication.")
           PY
+      - name: Test full-size preview package with temporary synthetic rates
+        run: python automation/smoke_preview.py
