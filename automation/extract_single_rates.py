@@ -14,7 +14,7 @@ import re
 import sys
 
 PART_RE = re.compile(r'^window\.__insuranceV117\.push\((.*)\);\s*$', re.DOTALL)
-IFRAME_RE = re.compile(r'<iframe\s+id="single"\b[^>]*?\bsrcdoc="(.*?)"\s+title=', re.DOTALL)
+IFRAME_RE = re.compile(r'<iframe\s+id="single"[^>]*?\bsrcdoc="(.*?)"\s+title=', re.DOTALL)
 PRODUCTS_RE = re.compile(r'\bconst\s+PRODUCTS\s*=\s*(\[.*?\])\s*;', re.DOTALL)
 DATE_RE = re.compile(r'^(\d{4}-\d{2}-\d{2})～(\d{4}-\d{2}-\d{2})$')
 
