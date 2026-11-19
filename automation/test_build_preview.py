@@ -29,6 +29,22 @@ class PreviewBuilderTests(unittest.TestCase):
         self.assertEqual(len(products[0]["rates"]),4)
         self.assertEqual(products[0]["rates"][-1]["value"],3.5)
         self.assertEqual(products[1],self.products[1])
+    def test_unverified_current_window_rate_suppressed(self):
+        # A different product carries an embedded current-period number,
+        # but there is no corresponding fresh, official source verification.
+        self.products[1]["rates"][0]["period"]="2026-11-16～2026-11-30"
+        page='<script>const PRODUCTS='+html.escape(json.dumps(self.products,ensure_ascii=False),quote=True)+';</script>'
+        updated=apply_rates(page,self.staged)
+        products=json.loads(html.unescape(updated.split("const PRODUCTS=")[1].split(";</script>")[0]))
+        unverified=products[1]
+        self.assertFalse(any(r["period"]==self.staged["period"] for r in unverified["rates"]))
+        self.assertIn("確認待ち",unverified["missingReason"])
+        self.assertEqual(len(unverified["rates"]),205)
+        self.assertEqual(len(products[0]["rates"]),4)
+    def test_no_change_when_other_products_have_only_history(self):
+        updated=apply_rates(self.page,self.staged)
+        products=json.loads(html.unescape(updated.split("const PRODUCTS=")[1].split(";</script>")[0]))
+        self.assertEqual(products[2],self.products[2])
     def test_wrong_release_blocked(self):
         stage={**self.staged,"catalog_release":"v999"}
         with self.assertRaises(ValueError):
