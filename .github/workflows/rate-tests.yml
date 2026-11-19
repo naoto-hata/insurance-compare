@@ -32,6 +32,8 @@ jobs:
           snap = json.loads((root / "v117-rate-snapshot.json").read_text())
           report = json.loads((root / "rate-coverage.json").read_text())
           assert snap["publication_allowed"] is False
+          assert len(snap["catalog"]) == 13, "Unexpected v117 product catalog drift"
+          assert len(snap["rates"]) == 219, "Unexpected v117 rate row count"
           assert report["rate_publication_allowed"] is False
           assert all(p["publishable_conditions"] == 0 for p in report["products"].values())
           print(f"Found {len(snap['catalog'])} products / {len(snap['rates'])} archived rows; all held out of publication.")
