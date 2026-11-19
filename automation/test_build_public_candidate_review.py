@@ -23,7 +23,7 @@ class PublicCandidateReviewTests(unittest.TestCase):
                      "records":self.records}
     def test_review_contains_only_approved_projection(self):
         page=build_review_html(self.staged)
-        self.assertEqual(page.count("<tr>"),54)
+        self.assertEqual(page.count("<tr><td>"),54)
         self.assertIn("publication_allowed: false",page)
         self.assertIn("3商品54条件",page)
         for forbidden in ("PRIVATE_CUSTOMER_XYZ","CONFIDENTIAL_SHOULD_NOT_APPEAR",
