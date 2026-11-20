@@ -28,10 +28,13 @@ def verify():
     for label in ("プレミアプレゼント5","プレミアレシーブ2","Moonshot（ムーンショット）"):
         if label not in page:
             raise ValueError("Expected insurer product missing")
-    if not all(s in page for s in ("id=\"rate-expired\"","id=\"rate-table\"",
-                                   "rate-table').hidden=true",END,"timeZone:'Asia/Tokyo'",
-                                   "formatToParts","適用期間は終了しました")):
-        raise ValueError("Japanese-time effective-period expiry protection missing")
+    if not all(s in page for s in (
+        'id="rate-expired"', 'id="rate-table" hidden style="display:none"',
+        'rateTable.hidden=true', 'rateTable.hidden=false',
+        '<noscript>', END, "timeZone:'Asia/Tokyo'",
+        'formatToParts', '適用期間は終了しました'
+    )):
+        raise ValueError("Fail-closed JST expiry protection missing")
     if "rates-current.html" not in index or "利率の確認待ち" not in index:
         raise ValueError("V117 main page does not link to expiry-aware rate table")
     if "formatToParts" not in index or END not in index:
