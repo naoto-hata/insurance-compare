@@ -6,6 +6,7 @@ on:
       - 'index.html'
       - 'rates-current.html'
       - 'automation/verify_v117_public.py'
+      - 'automation/test_v117_expiry.cjs'
       - '.github/workflows/v117-public-guard.yml'
   schedule:
     - cron: '35 0 * * *' # 09:35 Japan time; no write or deployment
@@ -23,3 +24,5 @@ jobs:
           python-version: '3.12'
       - name: Verify effective dates and confidentiality of public rate-only page
         run: python automation/verify_v117_public.py
+      - name: Simulate 11/30 to 12/1 Japan-time rate expiry
+        run: node automation/test_v117_expiry.cjs
