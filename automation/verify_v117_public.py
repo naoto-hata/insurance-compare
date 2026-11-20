@@ -31,7 +31,7 @@ def verify():
     if not all(s in page for s in (
         'id="rate-expired"', 'id="rate-table" hidden style="display:none"',
         'rateTable.hidden=true', 'rateTable.hidden=false',
-        '<noscript>', END, "timeZone:'Asia/Tokyo'",
+        '<noscript>', '2026-11-16', "jstDate < begins || jstDate > expires", END, "timeZone:'Asia/Tokyo'",
         'formatToParts', '適用期間は終了しました'
     )):
         raise ValueError("Fail-closed JST expiry protection missing")
