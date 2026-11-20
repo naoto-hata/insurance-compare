@@ -52,7 +52,7 @@ result = inspectAt("2026-11-30T15:00:00Z");
 assert.equal(result.table.hidden, true, "Old rates still presented as current");
 assert.equal(result.table.style.display, "none");
 assert.equal(result.expired.style.display, "block");
-assert.match(result.title, /適用期間終了/);
+assert.match(result.title, /適用期間外/);
 
 // A computer in another timezone must still obey Japan time.
 result = inspectAt("2026-12-02T12:00:00Z");
