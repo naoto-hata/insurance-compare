@@ -59,12 +59,14 @@
   }).formatToParts(new Date());
   const fields=Object.fromEntries(dateParts.map(p=>[p.type,p.value]));
   const jstDate=fields.year+'-'+fields.month+'-'+fields.day;
+  const begins='2026-11-16';
   const expires='2026-11-30';
   const rateTable=document.getElementById('rate-table');
-  if(jstDate > expires){
+  if(jstDate < begins || jstDate > expires){
     rateTable.hidden=true;
     rateTable.style.display='none';
-    document.getElementById('rate-expired').style.display='block';
+    const warning=document.getElementById('rate-expired');
+    warning.style.display='block';
     document.title='適用期間終了｜第117版 一時払利率';
   }else{
     rateTable.hidden=false;
