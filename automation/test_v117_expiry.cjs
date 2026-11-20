@@ -49,3 +49,28 @@ assert.match(result.title, /適用期間終了/);
 result = inspectAt("2026-12-02T12:00:00Z");
 assert.equal(result.table.hidden, true);
 console.log("PASS: JST date boundary hides expired v117 rate rows at 2026-12-01 00:00 JST.");
+
+
+const entry = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+const linkStart = entry.indexOf("const rateLink=document.createElement('a');");
+const linkEnd = entry.indexOf("document.body.appendChild(rateLink)", linkStart);
+assert.ok(linkStart >= 0 && linkEnd > linkStart, "V117 rate link script missing");
+const linkCode = entry.slice(linkStart, linkEnd + "document.body.appendChild(rateLink)".length);
+function inspectLinkAt(isoUtc) {
+  const date = new Date(isoUtc);
+  let inserted;
+  const doc = {
+    createElement(tag) { assert.equal(tag, "a"); return { setAttribute() {}, style: {} }; },
+    body: { appendChild(element) { inserted=element; } },
+  };
+  class DateAt extends Date {
+    constructor(...args) { super(...(args.length ? args : [date.getTime()])); }
+    static now() { return date.getTime(); }
+  }
+  vm.runInNewContext(linkCode, { document: doc, Date: DateAt, Intl }, { timeout: 1000 });
+  return inserted;
+}
+assert.match(inspectLinkAt("2026-11-30T14:59:00Z").textContent, /公式確認済み利率/);
+assert.match(inspectLinkAt("2026-11-30T15:00:00Z").textContent, /利率の確認待ち/);
+assert.equal(inspectLinkAt("2026-11-30T15:00:00Z").href, "./rates-current.html");
+console.log("PASS: V117 home-page link switches to confirmation-pending at Japanese midnight.");
