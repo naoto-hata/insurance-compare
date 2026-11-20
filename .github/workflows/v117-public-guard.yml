@@ -1,0 +1,25 @@
+name: V117 public rate page guard
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'rates-current.html'
+      - 'automation/verify_v117_public.py'
+      - '.github/workflows/v117-public-guard.yml'
+  schedule:
+    - cron: '35 0 * * *' # 09:35 Japan time; no write or deployment
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  safe-public-rates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify effective dates and confidentiality of public rate-only page
+        run: python automation/verify_v117_public.py
