@@ -33,6 +33,14 @@ function inspectAt(isoUtc) {
   return { expired, table, title: document.title };
 }
 
+// 2026-11-15 23:59 JST (not effective yet).
+let early = inspectAt("2026-11-15T14:59:00Z");
+assert.equal(early.table.hidden, true, "Future rates visible before beginning of period");
+
+// 2026-11-16 00:00 JST (period begins).
+let opening = inspectAt("2026-11-15T15:00:00Z");
+assert.equal(opening.table.hidden, false, "Rates not visible on first effective minute");
+
 // 2026-11-30 23:59 JST (still in period).
 let result = inspectAt("2026-11-30T14:59:00Z");
 assert.equal(result.table.hidden, false, "Rate table not released during valid period");
