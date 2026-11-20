@@ -32,7 +32,7 @@ def verify():
         'id="rate-expired"', 'id="rate-table" hidden style="display:none"',
         'rateTable.hidden=true', 'rateTable.hidden=false',
         '<noscript>', '2026-11-16', "jstDate < begins || jstDate > expires", END, "timeZone:'Asia/Tokyo'",
-        'formatToParts', '適用期間は終了しました'
+        'formatToParts', '現在の適用期間外です'
     )):
         raise ValueError("Fail-closed JST expiry protection missing")
     if "rates-current.html" not in index or "利率の確認待ち" not in index:
