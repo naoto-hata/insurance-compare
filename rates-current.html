@@ -54,9 +54,11 @@
 <tr><td>オリックス生命</td><td>Moonshot（ムーンショット）</td><td>円</td><td>積立利率</td><td>10年</td><td>0～90歳</td><td class="num">2.55%</td><td>—</td></tr></tbody></table></div><p><small>積立利率と定期支払率は異なります。指定通貨や契約年齢、保障プラン、告知要件等によって異なります。掲載情報は個別の保険提案・設計書に代わるものではありません。</small></p></main><script>
 (function(){
   // Date is interpreted in the insurer's Japanese time zone, not the PC's.
-  const jstDate=new Intl.DateTimeFormat('en-CA',{
+  const dateParts=new Intl.DateTimeFormat('en-US',{
     timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'
-  }).format(new Date());
+  }).formatToParts(new Date());
+  const fields=Object.fromEntries(dateParts.map(p=>[p.type,p.value]));
+  const jstDate=fields.year+'-'+fields.month+'-'+fields.day;
   const expires='2026-11-30';
   if(jstDate > expires){
     document.getElementById('rate-table').hidden=true;
