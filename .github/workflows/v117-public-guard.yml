@@ -28,5 +28,7 @@ jobs:
         run: python automation/verify_v117_public.py
       - name: Simulate 11/30 to 12/1 Japan-time rate expiry
         run: node automation/test_v117_expiry.cjs
+      - name: Test live-page integrity rejection cases without network access
+        run: python -m unittest discover -s automation -p 'test_verify_live_v117.py' -v
       - name: Verify deployed rates page matches reviewed main file
         run: python automation/verify_live_v117.py
