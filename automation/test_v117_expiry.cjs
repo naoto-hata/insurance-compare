@@ -12,7 +12,7 @@ assert.equal((html.match(/<tr><td>/g) || []).length, 54);
 
 function inspectAt(isoUtc) {
   const expired = { style: { display: "none" }, hidden: false };
-  const table = { style: { display: "" }, hidden: false };
+  const table = { style: { display: "none" }, hidden: true };
   const document = {
     title: "第117版｜公式確認済み一時払利率",
     getElementById(id) {
@@ -35,7 +35,8 @@ function inspectAt(isoUtc) {
 
 // 2026-11-30 23:59 JST (still in period).
 let result = inspectAt("2026-11-30T14:59:00Z");
-assert.equal(result.table.hidden, false, "Rate table hidden before the last valid minute");
+assert.equal(result.table.hidden, false, "Rate table not released during valid period");
+assert.equal(result.table.style.display, "block");
 assert.equal(result.expired.style.display, "none");
 
 // 2026-12-01 00:00 JST (one minute later).
@@ -48,7 +49,7 @@ assert.match(result.title, /適用期間終了/);
 // A computer in another timezone must still obey Japan time.
 result = inspectAt("2026-12-02T12:00:00Z");
 assert.equal(result.table.hidden, true);
-console.log("PASS: JST date boundary hides expired v117 rate rows at 2026-12-01 00:00 JST.");
+console.log("PASS: JST date boundary reveals rates only while valid; expired/default state is hidden.");
 
 
 const entry = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
