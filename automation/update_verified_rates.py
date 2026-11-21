@@ -139,7 +139,7 @@ def render(template,validated,day):
     current_table=TABLE.search(template)
     same_period=("const begins='"+start.isoformat()+"';" in template
                  and "const expires='"+end.isoformat()+"';" in template)
-    if same_period and current_table and re.sub(r"\\s+","","".join(current_table.group(2).split()))==re.sub(r"\\s+","","".join(tr)):
+    if same_period and current_table and "".join(current_table.group(2).split())=="".join("".join(tr).split()):
         return template
     heading=f"対象：{start.year}年{start.month}月{start.day}日～{end.month}月{end.day}日"
     check=f"{day.year}年{day.month}月{day.day}日の公式サイト照合で確認した3商品・54条件"
@@ -150,7 +150,11 @@ def render(template,validated,day):
     new=EXPIRES.sub("const expires='"+end.isoformat()+"';",new)
     if new.count("<tr><td>")+new.count("<tr><td class=\"num\">")!=54:
         raise ValueError("Rendered rates row count changed")
-    if "自動更新ページではありません。" in new:\n        raise ValueError("Obsolete release notice in generated page")\n    if "全条件が一致したときだけ更新します。" not in new:\n        raise ValueError("Safe auto-update explanation missing")\n    if len(new.encode("utf-8"))>40_000 or len(CODE.findall(new))!=1 or any(x in new for x in FORBIDDEN):
+    if "自動更新ページではありません。" in new:
+        raise ValueError("Obsolete release notice in generated page")
+    if "全条件が一致したときだけ更新します。" not in new:
+        raise ValueError("Safe auto-update explanation missing")
+    if len(new.encode("utf-8"))>40_000 or len(CODE.findall(new))!=1 or any(x in new for x in FORBIDDEN):
         raise ValueError("Unsafe or unexpectedly large output")
     if new.count('id="rate-table" hidden style="display:none"')!=1 or "jstDate < begins || jstDate > expires" not in new:
         raise ValueError("Fail-closed effective-date protection missing")
