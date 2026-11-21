@@ -140,6 +140,11 @@ def render(template,validated,day):
     same_period=("const begins='"+start.isoformat()+"';" in template
                  and "const expires='"+end.isoformat()+"';" in template)
     if same_period and current_table and "".join(current_table.group(2).split())=="".join("".join(tr).split()):
+        # No-op only if the current page already passed all release safeguards.
+        if "自動更新ページではありません。" in template or "全条件が一致したときだけ更新します。" not in template:
+            raise ValueError("Existing rate page disclosure is outdated")
+        if 'id="rate-table" hidden style="display:none"' not in template or "jstDate < begins || jstDate > expires" not in template:
+            raise ValueError("Existing rate page fail-closed gates missing")
         return template
     heading=f"対象：{start.year}年{start.month}月{start.day}日～{end.month}月{end.day}日"
     check=f"{day.year}年{day.month}月{day.day}日の公式サイト照合で確認した3商品・54条件"
