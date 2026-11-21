@@ -46,7 +46,7 @@ def verify():
     )
     if not all(x in page for x in required):
         raise ValueError("Fail-closed JST rate gate missing")
-    if "rates-current.html" not in index or "公式利率一覧・最新の適用状況を確認" not in index:
+    if "rates-current.html" not in index or "公式利率の自動更新一覧（3商品）" not in index:
         raise ValueError("V117 home missing evergreen rate link")
     if len(re.findall(r'<script\b',page,re.I))!=1:
         raise ValueError("Unexpected JS in public rate page")
