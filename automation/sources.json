@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "note": "URLs copied from the existing v117 single-premium product catalog. Monitoring a URL does not verify the underlying rate values or the insurer's distribution channel.",
+  "sources": [
+    {
+      "id": "sunny",
+      "company": "メットライフ生命",
+      "product": "サニーガーデン プライム",
+      "url": "https://www.metlife.co.jp/lf1/ahp805/08.html",
+      "type": "catalog_rate_url_unverified"
+    },
+    {
+      "id": "bewithusd",
+      "company": "メットライフ生命",
+      "product": "ビー ウィズ ユー プラスⅡ（米ドル建）",
+      "url": "https://www.metlife.co.jp/lf1/ahp770/08.html",
+      "type": "catalog_rate_url_unverified"
+    },
+    {
+      "id": "bewithjpy",
+      "company": "メットライフ生命",
+      "product": "ビー ウィズ ユー プラスⅡ（円建）",
+      "url": "https://www.metlife.co.jp/lf1/ahp771/08.html",
+      "type": "catalog_rate_url_unverified"
+    },
+    {
+      "id": "present",
+      "company": "第一フロンティア生命",
+      "product": "プレミアプレゼント5",
+      "url": "https://www.d-frontier-life.co.jp/products/index_hendo_shushin_choice_20_6.html?agency=227&product=224",
+      "type": "catalog_rate_url_unverified"
+    },
+    {
+      "id": "receive",
+      "company": "第一フロンティア生命",
+      "product": "プレミアレシーブ2",
+      "url": "https://www.d-frontier-life.co.jp/products/index_recurrining_payment_shushin_23.html?agency=132&product=204",
+      "type": "catalog_rate_url_unverified"
+    },
+    {
+      "id": "upside",
+      "company": "アクサ生命",
+      "product": "アップサイドプラス",
+      "url": "https://www2.axa.co.jp/party/contractor/report/spw.html",
+      "type": "catalog_rate_url_unverified"
+    },
+    {
+      "id": "enjoy",
+      "company": "マニュライフ生命",
+      "product": "未来を楽しむ終身保険",
+      "url": "https://www.manulife.co.jp/ja/individual/rates/tanoshimusyushin/int.html",
+      "type": "catalog_rate_url_unverified"
+    },
+    {
+      "id": "connect",
+      "company": "マニュライフ生命",
+      "product": "未来につなげる終身保険v2",
+      "url": "https://www.manulife.co.jp/ja/individual/rates/miraisyushinv2-1/ln-baseint.html",
+      "type": "catalog_rate_url_unverified"
+    },
+    {
+      "id": "medicare",
+      "company": "メディケア生命",
+      "product": "メディフィット一時払終身＋がん",
+      "url": "https://www.medicarelife.com/products/shop/medifit_ig/",
+      "type": "catalog_rate_url_unverified"
+    },
+    {
+      "id": "fwd",
+      "company": "FWD生命",
+      "product": "FWD円建一時払変額年金（ラチェット）",
+      "url": "https://customer.fwdlife.co.jp/seimei/rate/AccumulatedInterestRateDistributionRate.html",
+      "type": "catalog_rate_url_unverified"
+    },
+    {
+      "id": "moon",
+      "company": "オリックス生命",
+      "product": "Moonshot（ムーンショット）",
+      "url": "https://www.orixlife.co.jp/fx/whole-life/accumulation-interest-rate",
+      "type": "catalog_rate_url_unverified"
+    },
+    {
+      "id": "gib",
+      "company": "ジブラルタ生命",
+      "product": "積立利率更改型一時払終身保険（23）",
+      "url": "https://www.gib-life.co.jp/st/intro/products/kyotsu/rate/tatsuka_syushin_23/fxrate/",
+      "type": "catalog_rate_url_unverified"
+    },
+    {
+      "id": "sony",
+      "company": "ソニー生命",
+      "product": "指定通貨建積立利率更改型一時払終身保険（無告知型）",
+      "url": "https://www.sonylife.co.jp/rate/accumulation_interest_rate/",
+      "type": "catalog_rate_url_unverified"
+    }
+  ]
+}
