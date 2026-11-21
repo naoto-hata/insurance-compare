@@ -46,6 +46,6 @@ p=simulate(dt(oneDayAfterEnd));
 assert.equal(p.table.hidden,true);
 assert.equal(p.table.style.display,"none");
 assert.equal(p.notice.style.display,"block");
-assert.match(index,/公式利率一覧・最新の適用状況を確認/);
+assert.match(index,/公式利率の自動更新一覧（3商品）/);
 assert.match(index,/rates-current\.html/);
 console.log("PASS: JST start/end boundaries, default-hidden expiry, evergreen v117 link.");
