@@ -150,7 +150,7 @@ def render(template,validated,day):
     new=EXPIRES.sub("const expires='"+end.isoformat()+"';",new)
     if new.count("<tr><td>")+new.count("<tr><td class=\"num\">")!=54:
         raise ValueError("Rendered rates row count changed")
-    if len(new.encode("utf-8"))>40_000 or len(CODE.findall(new))!=1 or any(x in new for x in FORBIDDEN):
+    if "自動更新ページではありません。" in new:\n        raise ValueError("Obsolete release notice in generated page")\n    if "全条件が一致したときだけ更新します。" not in new:\n        raise ValueError("Safe auto-update explanation missing")\n    if len(new.encode("utf-8"))>40_000 or len(CODE.findall(new))!=1 or any(x in new for x in FORBIDDEN):
         raise ValueError("Unsafe or unexpectedly large output")
     if new.count('id="rate-table" hidden style="display:none"')!=1 or "jstDate < begins || jstDate > expires" not in new:
         raise ValueError("Fail-closed effective-date protection missing")
