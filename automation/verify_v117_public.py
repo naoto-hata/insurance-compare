@@ -29,7 +29,7 @@ def verify():
         raise ValueError("Missing effective-date boundaries")
     start=dt.date.fromisoformat(begin.group(1))
     end=dt.date.fromisoformat(expiry.group(1))
-    if start.day not in (1,16) or (end-start).days<13 or (end-start).days>15:
+    if start.day not in (1,16) or (end-start).days<12 or (end-start).days>15:
         raise ValueError("Invalid half-monthly effective interval")
     if start.day==1 and end.day!=15:
         raise ValueError("First half must end on day 15")
