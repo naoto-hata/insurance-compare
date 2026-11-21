@@ -1,0 +1,69 @@
+name: Rate automation regression checks
+on:
+  pull_request:
+    paths:
+      - 'automation/**'
+      - '.github/workflows/half-monthly-rates.yml'
+      - '.github/workflows/rate-tests.yml'
+      - 'v117/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit tests
+        run: python -m unittest discover -s automation -p 'test_*.py' -v
+      - name: Extract v117 embedded rates
+        run: python automation/extract_single_rates.py
+      - name: Check coverage and archived-only flags
+        run: |
+          python automation/rate_coverage.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("automation")
+          snap = json.loads((root / "v117-rate-snapshot.json").read_text())
+          report = json.loads((root / "rate-coverage.json").read_text())
+          assert snap["publication_allowed"] is False
+          assert len(snap["catalog"]) == 13, "Unexpected v117 product catalog drift"
+          assert len(snap["rates"]) == 219, "Unexpected v117 rate row count"
+          assert report["rate_publication_allowed"] is False
+          assert all(p["publishable_conditions"] == 0 for p in report["products"].values())
+          print(f"Found {len(snap['catalog'])} products / {len(snap['rates'])} archived rows; all held out of publication.")
+          PY
+      - name: Check Moonshot live official page against existing rate dimensions (read-only)
+        id: moonshot_live
+        run: python automation/live_moonshot_probe.py
+      - name: Report live Moonshot probe state
+        if: always()
+        run: echo "Moonshot official-page integration result = ${{ steps.moonshot_live.outcome }} (not an authorization to publish)"
+
+      - name: Verify live First Frontier official rates against all 52 conditions
+        run: python automation/live_dfl_probe.py
+
+      - name: Verify 54 official rate cells in asset-free temporary review only
+        run: python automation/smoke_safe_rate_only.py
+      - name: Assert public export is blocked pending privacy review
+        run: |
+          python - <<'PY'
+          import sys
+          sys.path.insert(0, "automation")
+          from security_gate import inspect
+          from build_preview import load_page
+          from pathlib import Path
+          report = inspect(load_page(Path(".")))
+          assert report["publication_allowed"] is False
+          assert "PRIVATE_SECTION_EMBEDDED" in report["finding_codes"]
+          print("PASS: Public export blocked; no private/internal assets uploaded.")
+          PY
+      - name: Inventory embedded assets by metadata only (no document contents)
+        run: python automation/inventory_embedded_assets.py
+      - name: Enforce no-artifact and read-only rate workflow policy
+        run: python automation/check_rate_workflows.py
