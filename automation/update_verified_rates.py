@@ -134,6 +134,13 @@ def render(template,validated,day):
         raise ValueError("Unexpected current rate page structure")
     if len(BEGIN.findall(template))!=1 or len(EXPIRES.findall(template))!=1:
         raise ValueError("Missing effective-date guards")
+    # Recheck official sources every day but do not commit a new page merely
+    # to change the checked-at date when the period and 54 values match.
+    current_table=TABLE.search(template)
+    same_period=("const begins='"+start.isoformat()+"';" in template
+                 and "const expires='"+end.isoformat()+"';" in template)
+    if same_period and current_table and re.sub(r"\\s+","","".join(current_table.group(2).split()))==re.sub(r"\\s+","","".join(tr)):
+        return template
     heading=f"対象：{start.year}年{start.month}月{start.day}日～{end.month}月{end.day}日"
     check=f"{day.year}年{day.month}月{day.day}日の公式サイト照合で確認した3商品・54条件"
     new=TABLE.sub(lambda m:m.group(1)+"\n"+"\n".join(tr)+m.group(3),template)
