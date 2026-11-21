@@ -35,6 +35,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Check remaining official insurer host allowlist
+        run: python -m unittest discover -s automation -p 'test_monitor_remaining_sources.py' -v
+      - name: Check remaining ten source sites without collecting data
+        continue-on-error: true
+        run: python automation/monitor_remaining_sources.py
       - name: Catch invalid updater syntax before official HTTP requests
         run: |
           python -m py_compile automation/update_verified_rates.py automation/parse_dfl.py automation/parse_moonshot.py automation/stage_rates.py automation/validate_rates.py automation/extract_single_rates.py
