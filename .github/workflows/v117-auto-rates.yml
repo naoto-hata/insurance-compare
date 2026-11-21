@@ -1,0 +1,71 @@
+name: V117 verified official rate auto-refresh
+on:
+  schedule:
+    - cron: '15 1 * * *' # 10:15 JST; retry daily when insurer posts new half-month figures
+  push:
+    branches: [main]
+    paths:
+      - 'automation/update_verified_rates.py'
+      - 'automation/parse_dfl.py'
+      - 'automation/parse_moonshot.py'
+      - 'automation/stage_rates.py'
+      - 'automation/validate_rates.py'
+      - 'automation/extract_single_rates.py'
+      - 'automation/sources.json'
+      - '.github/workflows/v117-auto-rates.yml'
+  workflow_dispatch:
+# The updater may write ONLY the public rate-only HTML. No old app content,
+# private source documents or downloaded insurer HTML are ever committed.
+permissions:
+  contents: write
+concurrency:
+  group: v117-official-rates-publication
+  cancel-in-progress: false
+jobs:
+  refresh-verified-rates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout current public v117 branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate existing safe rate-only page
+        run: |
+          python automation/verify_v117_public.py
+          node automation/test_v117_expiry.cjs
+      - name: Fetch and strictly verify all official 54 conditions (dry run)
+        env:
+          AUTO_RATE_DRY_RUN: '1'
+        run: python automation/update_verified_rates.py
+      - name: Update ONLY rates-current.html from verified official conditions
+        run: python automation/update_verified_rates.py
+      - name: Re-test all published rate and privacy gates
+        run: |
+          python automation/verify_v117_public.py
+          node automation/test_v117_expiry.cjs
+      - name: Commit only the small public rate page if its content changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "$(git status --porcelain --untracked-files=no -- index.html v117)" ]]; then
+            echo "::error::Unexpected modification of main app or legacy content"
+            exit 1
+          fi
+          git add -- rates-current.html
+          if git diff --cached --quiet; then
+            echo "All 54 official conditions already match the published period; no commit."
+            exit 0
+          fi
+          if [[ "$(git diff --cached --name-only)" != "rates-current.html" ]]; then
+            echo "::error::Unexpected staged file"
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: verify and refresh public v117 half-month insurer rates"
+          git push origin HEAD:main
