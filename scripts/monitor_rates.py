@@ -35,7 +35,12 @@ for name, url in SOURCES:
             result = "短い応答・要確認"
         rows.append({"name": name, "url": url, "status": result, "http": status, "content_sha256": hashlib.sha256(body).hexdigest()})
     except Exception as exc:
-        rows.append({"name": name, "url": url, "status": "取得失敗・要確認", "error": str(exc)[:160], "content_sha256": None})
+        # Do not disclose URL query parameters, HTTP response bodies, access tokens,
+        # proxy details, or other exception payloads in public Actions artifacts.
+        safe_type = type(exc).__name__
+        if safe_type not in ("HTTPError", "URLError", "TimeoutError", "SSLError", "ValueError", "OSError"):
+            safe_type = "OtherAccessError"
+        rows.append({"name": name, "url": url, "status": "取得失敗・要確認", "error_category": safe_type, "content_sha256": None})
 previous_status = {}
 try:
     previous = json.loads(Path("rates/status.json").read_text(encoding="utf-8"))
