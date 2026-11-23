@@ -41,33 +41,46 @@ def analyze_sources(catalog):
             raise ValueError("Source not on official insurer host allowlist")
     return selected
 
+def classify_response(status, body, content_type):
+    """Classify reachability only; large pages are NOT 'missing' rate sources."""
+    if status != 200:
+        return "HTTP_STATUS_REVIEW_REQUIRED"
+    if not body:
+        return "EMPTY_SOURCE_REVIEW_REQUIRED"
+    if body.startswith(b"%PDF") or "application/pdf" in content_type.lower():
+        return "OFFICIAL_PDF_ACCESSIBLE_NOT_PARSED"
+    if len(body) > MAX_BYTES:
+        return "LARGE_PAGE_ACCESSIBLE_NOT_PARSED"
+    return "REACHABLE_RATE_VALUES_UNVERIFIED"
+
 def check():
     catalog=json.loads(SOURCES.read_text(encoding="utf-8"))
     selection=analyze_sources(catalog)
     opener=urllib.request.build_opener(RestrictedRedirect())
-    reachable=0
+    statuses={}
     for source in selection:
-        status="REVIEW_REQUIRED"
+        code="ACCESS_NEEDS_REVIEW"
         try:
             req=urllib.request.Request(source["url"],headers={
                 "User-Agent":"InsuranceCompareRateSourceHealth/1.0",
-                "Accept":"text/html",
+                "Accept":"text/html,application/pdf",
             })
             with opener.open(req,timeout=TIMEOUT) as response:
                 p=urlsplit(response.geturl())
                 if p.scheme!="https" or p.hostname not in ALLOWED_HOSTS:
                     raise ValueError("Unapproved final host")
-                # Read only a bounded prefix; never log its contents or save it.
                 sample=response.read(MAX_BYTES+1)
-                if response.status==200 and len(sample)<=MAX_BYTES:
-                    status="REACHABLE_NOT_VERIFIED"
-                    reachable+=1
-                elif len(sample)>MAX_BYTES:
-                    status="TOO_LARGE_TO_INSPECT"
+                code=classify_response(response.status,sample,response.headers.get("Content-Type",""))
+        except urllib.error.HTTPError as exc:
+            code="HTTP_"+str(exc.code)+"_ACCESS_REVIEW_REQUIRED"
         except (OSError,urllib.error.URLError,ValueError,TimeoutError):
-            status="ACCESS_NEEDS_REVIEW"
-        print("Remaining-product",source["id"],status)
-    print("READ ONLY: reachable sources",reachable,"of 10; no rate values validated, no artifacts produced.")
+            code="ACCESS_NEEDS_REVIEW"
+        # This emits only static product IDs and finite status codes;
+        # not URLs, HTML, source document excerpts or exception strings.
+        statuses[code]=statuses.get(code,0)+1
+        print("Remaining-product",source["id"],code)
+    print("READ ONLY: ten source checks",json.dumps(statuses,sort_keys=True))
+    print("NO NUMERIC RATE VERIFICATION; no assets, contact data or downloaded pages retained.")
 
 if __name__=="__main__":
     check()
