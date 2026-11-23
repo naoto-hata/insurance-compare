@@ -7,6 +7,8 @@ on:
     paths:
       - 'automation/update_verified_rates.py'
       - 'automation/test_update_verified_rates.py'
+      - 'automation/monitor_remaining_sources.py'
+      - 'automation/test_monitor_remaining_sources.py'
       - 'automation/parse_dfl.py'
       - 'automation/parse_moonshot.py'
       - 'automation/stage_rates.py'
