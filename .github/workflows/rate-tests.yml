@@ -18,6 +18,21 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Verify deployed main branch updater and privacy checks (read-only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --depth=1
+          git worktree add --detach /tmp/insurance-v117-main FETCH_HEAD
+          cd /tmp/insurance-v117-main
+          python -m py_compile automation/update_verified_rates.py automation/parse_dfl.py automation/parse_moonshot.py automation/stage_rates.py automation/validate_rates.py automation/extract_single_rates.py
+          python -m unittest discover -s automation -p 'test_update_verified_rates.py' -v
+          python -m unittest discover -s automation -p 'test_monitor_remaining_sources.py' -v
+          python -m unittest discover -s automation -p 'test_v117_workflow_policy.py' -v
+          python -m unittest discover -s automation -p 'test_monitor_privacy_policy.py' -v
+          python automation/verify_v117_public.py
+          node automation/test_v117_expiry.cjs
+          python -m unittest discover -s automation -p 'test_verify_live_v117.py' -v
       - name: Unit tests
         run: python -m unittest discover -s automation -p 'test_*.py' -v
       - name: Extract v117 embedded rates
