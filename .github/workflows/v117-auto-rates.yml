@@ -9,6 +9,7 @@ on:
       - 'automation/test_update_verified_rates.py'
       - 'automation/monitor_remaining_sources.py'
       - 'automation/test_monitor_remaining_sources.py'
+      - 'automation/test_v117_workflow_policy.py'
       - 'automation/parse_dfl.py'
       - 'automation/parse_moonshot.py'
       - 'automation/stage_rates.py'
@@ -43,6 +44,8 @@ jobs:
       - name: Check remaining ten source sites without collecting data
         continue-on-error: true
         run: python automation/monitor_remaining_sources.py
+      - name: Enforce no-private-upload and strict rate-only publication policy
+        run: python -m unittest discover -s automation -p 'test_v117_workflow_policy.py' -v
       - name: Catch invalid updater syntax before official HTTP requests
         run: |
           python -m py_compile automation/update_verified_rates.py automation/parse_dfl.py automation/parse_moonshot.py automation/stage_rates.py automation/validate_rates.py automation/extract_single_rates.py
