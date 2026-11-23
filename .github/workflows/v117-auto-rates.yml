@@ -19,6 +19,7 @@ on:
 # private source documents or downloaded insurer HTML are ever committed.
 permissions:
   contents: write
+  issues: write
 concurrency:
   group: v117-official-rates-publication
   cancel-in-progress: false
@@ -88,3 +89,29 @@ jobs:
         run: |
           echo "⚠️ 公式利率の完全取得・公開検査に失敗したため更新を保留しました。公開ページは前回確認分のままです。" >> "$GITHUB_STEP_SUMMARY"
           echo "古い適用期間の利率は画面上で非表示になります。商品別公式サイトを確認してください。" >> "$GITHUB_STEP_SUMMARY"
+      - name: Create or update a single safe alert issue after automatic update failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TITLE="[自動利率更新] 公式54条件の照合失敗・確認が必要"
+          NUMBER="$(gh issue list --state open --limit 100 --json number,title --jq '.[] | select(.title == "[自動利率更新] 公式54条件の照合失敗・確認が必要") | .number' | head -n1)"
+          BODY="3商品54条件の自動利率照合・安全検査・更新処理のいずれかに失敗しました。未確認の値は公開していません。適用期間終了後は利率表を非表示にします。原因の確認は Actions 実行履歴をご覧ください。顧客情報や保険会社ページ本文は、この通知に含まれません。"
+          if [[ -z "$NUMBER" ]]; then
+            gh issue create --title "$TITLE" --body "$BODY"
+          else
+            gh issue edit "$NUMBER" --body "$BODY"
+          fi
+      - name: Close resolved auto-rate issue after successful verification
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          NUMBER="$(gh issue list --state open --limit 100 --json number,title --jq '.[] | select(.title == "[自動利率更新] 公式54条件の照合失敗・確認が必要") | .number' | head -n1)"
+          if [[ -n "$NUMBER" ]]; then
+            gh issue close "$NUMBER" --comment "公式3商品54条件の照合と公開前の安全検査が成功しました。"
+          fi
