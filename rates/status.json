@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-11-23T18:09:08.703355+09:00",
+  "checked_at": "2026-11-24T19:58:25.960165+09:00",
   "rate_data_updated": false,
   "rate_verification": "not_performed",
   "monitoring_results": [
@@ -25,13 +25,13 @@
     {
       "product_id": "present",
       "status": "取得可・数値未照合",
-      "content_sha256": "edaf6dbb7462a5589cafa6b7a5f3737b283f4916dc6211d93f7af1f51feaff9a",
+      "content_sha256": "703589670e06fc5acd8e68bae927c04b8d420ed554b3c0c7d0bce7e4cdbbaaa9",
       "content_changed": true
     },
     {
       "product_id": "receive",
       "status": "取得可・数値未照合",
-      "content_sha256": "916ab40eb204616787b5e6c66dc40051c798c2099e4be3ac5710e4c1c82dd02a",
+      "content_sha256": "ac1ccc4c9c555c34a8fee49fdca500252365f3ee3f206c1123c0ae899cab6b3e",
       "content_changed": true
     },
     {
@@ -67,13 +67,13 @@
     {
       "product_id": "moon",
       "status": "取得可・数値未照合",
-      "content_sha256": "44aff67d6b45b31522507ae3e9362a09d42cc621713ada9ef4a936f5a5c06797",
+      "content_sha256": "dd5b11be9535e91204f211995682f0713ff5ce0944aa2a7dcca21c797f4100ba",
       "content_changed": true
     },
     {
       "product_id": "gib",
-      "status": "取得失敗・要確認",
-      "content_sha256": null,
+      "status": "取得可・数値未照合",
+      "content_sha256": "96c007643be0d24a6bbd06234f26a1e17cfcaaff61d9fabac4d0336616f6bd6a",
       "content_changed": false
     },
     {
