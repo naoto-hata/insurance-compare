@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-11-24T19:58:25.960165+09:00",
+  "checked_at": "2026-11-25T18:53:15.746841+09:00",
   "rate_data_updated": false,
   "rate_verification": "not_performed",
   "monitoring_results": [
@@ -25,13 +25,13 @@
     {
       "product_id": "present",
       "status": "取得可・数値未照合",
-      "content_sha256": "703589670e06fc5acd8e68bae927c04b8d420ed554b3c0c7d0bce7e4cdbbaaa9",
+      "content_sha256": "60f92d5341bae1c25b7492ce016f4798b2350408df48dd68428d5288ce6a2d63",
       "content_changed": true
     },
     {
       "product_id": "receive",
       "status": "取得可・数値未照合",
-      "content_sha256": "ac1ccc4c9c555c34a8fee49fdca500252365f3ee3f206c1123c0ae899cab6b3e",
+      "content_sha256": "34ab3b8de0279331afa8f0f531cd7c941706d8ef31a842c144b8978b6ceaf4b3",
       "content_changed": true
     },
     {
@@ -67,14 +67,14 @@
     {
       "product_id": "moon",
       "status": "取得可・数値未照合",
-      "content_sha256": "dd5b11be9535e91204f211995682f0713ff5ce0944aa2a7dcca21c797f4100ba",
+      "content_sha256": "a768b385f61db1d331de1a9bd8897b6e80df830a18cdf7ba329a2a1ec1919bf3",
       "content_changed": true
     },
     {
       "product_id": "gib",
       "status": "取得可・数値未照合",
-      "content_sha256": "96c007643be0d24a6bbd06234f26a1e17cfcaaff61d9fabac4d0336616f6bd6a",
-      "content_changed": false
+      "content_sha256": "a263faecdecb7290eb01f81a88181b43c5d485be3e0f8b2b8b46f4d81936773e",
+      "content_changed": true
     },
     {
       "product_id": "sony",
