@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-11-27T18:42:23.907277+09:00",
+  "checked_at": "2026-11-28T17:55:53.501884+09:00",
   "rate_data_updated": false,
   "rate_verification": "not_performed",
   "monitoring_results": [
@@ -25,13 +25,13 @@
     {
       "product_id": "present",
       "status": "取得可・数値未照合",
-      "content_sha256": "dd5c73e7524c527ffa371029276a4679b3e0a7f1437fbf1b76448f39340509dc",
+      "content_sha256": "00045b083f09371a83c0c40a727ca9701d836047ba49a6e0b6aead4040ff6c7e",
       "content_changed": true
     },
     {
       "product_id": "receive",
       "status": "取得可・数値未照合",
-      "content_sha256": "f51f32288ceb09925ebd230e411f3122d9664e095c628b6b5e610f8acac89992",
+      "content_sha256": "7145ad63e08fe5ad1247d5203adfb076e46d8e7f28169fc5e0a910b6b2ccbc08",
       "content_changed": true
     },
     {
@@ -67,13 +67,13 @@
     {
       "product_id": "moon",
       "status": "取得可・数値未照合",
-      "content_sha256": "98e5630c2f46b4651bd8c8c1547c90d0336b162d8db6619eeab488ce1f249ef8",
+      "content_sha256": "935c46ee99ebeb5596dece50b8822b9649a20c1c19e98e12fb9aa156d6199bc4",
       "content_changed": true
     },
     {
       "product_id": "gib",
       "status": "取得可・数値未照合",
-      "content_sha256": "c5f33b352c9756d9577cd313ec3b75be702236cc0071ca868992a1d154f032d2",
+      "content_sha256": "60ba45ddf89ad61f31d55cded369191de630f25a9b6c17b8cd428d53850b283d",
       "content_changed": true
     },
     {
